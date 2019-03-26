@@ -4,7 +4,7 @@ ZSH=$HOME/.oh-my-zsh
 
 # You can change the theme with another one 
 #   https://github.com/robbyrussell/oh-my-zsh/wiki/themes
-ZSH_THEME="robbyrussell"
+ZSH_THEME="agnoster"
 
 # Useful plugins for Rails development with Sublime Text
 plugins=(z gitfast last-working-dir common-aliases sublime zsh-syntax-highlighting history-substring-search ssh-agent)
@@ -36,3 +36,17 @@ export BUNDLER_EDITOR="subl $@ >/dev/null 2>&1 -a"
 
 export DISPLAY=:0
 sudo /etc/init.d/postgresql start
+
+if [ -f ~/.dir_colors ]; then  
+  eval `dircolors ~/.dir_colors`
+fi
+
+prompt_context() {
+  if [[ -n "$SSH_CLIENT" ]]; then
+    prompt_segment black default "%(!.%{%F{yellow}%}.)$USER"
+  fi
+}
+
+prompt_dir() {
+  prompt_segment blue black '%2~'
+}
