@@ -6,8 +6,10 @@ ZSH=$HOME/.oh-my-zsh
 #   https://github.com/robbyrussell/oh-my-zsh/wiki/themes
 ZSH_THEME="agnoster"
 
-# Useful plugins for Rails development with Sublime Text
-plugins=(zsh-autosuggestions z git gitfast last-working-dir common-aliases sublime zsh-syntax-highlighting history-substring-search ssh-agent)
+# Plugins and generic ZSH setup
+plugins=(zsh-notify zsh-autosuggestions z git gitfast last-working-dir common-aliases zsh-syntax-highlighting history-substring-search ssh-agent)
+setopt correct_all
+
 
 # Prevent Homebrew from reporting - https://github.com/Homebrew/brew/blob/master/share/doc/homebrew/Analytics.md
 export HOMEBREW_NO_ANALYTICS=1
@@ -17,7 +19,7 @@ source "${ZSH}/oh-my-zsh.sh"
 unalias rm # No interactive rm by default (brought by plugins/common-aliases)
 
 # Load rbenv if installed
-#export PATH="${HOME}/.rbenv/bin:${PATH}"
+export PATH="${HOME}/.rbenv/bin:${PATH}"
 type -a rbenv > /dev/null && eval "$(rbenv init -)"
 
 # Rails and Ruby uses the local `bin` folder to store binstubs.
@@ -55,8 +57,6 @@ prompt_dir() {
 }
 
 # Nix shell setup @babylon
-export ARTIFACTORY_USER="giovanni.fantini"
-export ARTIFACTORY_PWD="Pret-Ham-Baguette"
 . /Users/giovanni.fantini/.nix-profile/etc/profile.d/nix.sh
 
 # QT pathing @babylon
