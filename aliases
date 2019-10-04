@@ -5,3 +5,11 @@ alias speedtest="wget -O /dev/null http://speedtest.wdc01.softlayer.com/download
 
 # Quickly serve the current directory as HTTP
 alias serve='ruby -run -e httpd . -p 8000'  # Or python -m SimpleHTTPServer :)
+
+# Phraseapp
+alias phraseapp="~/Applications/phraseapp"
+
+# Configs
+alias zshconfig="vim ~/.zshrc"
+alias aliasconfig="vim ~/.aliases"
+alias babylonconfig="vim ~/.babylon.sh"

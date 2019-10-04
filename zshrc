@@ -7,9 +7,8 @@ ZSH=$HOME/.oh-my-zsh
 ZSH_THEME="agnoster"
 
 # Plugins and generic ZSH setup
-plugins=(zsh-notify zsh-autosuggestions z git gitfast last-working-dir common-aliases zsh-syntax-highlighting history-substring-search ssh-agent)
+plugins=(zsh-autosuggestions z git gitfast last-working-dir common-aliases zsh-syntax-highlighting history-substring-search ssh-agent)
 setopt correct_all
-
 
 # Prevent Homebrew from reporting - https://github.com/Homebrew/brew/blob/master/share/doc/homebrew/Analytics.md
 export HOMEBREW_NO_ANALYTICS=1
@@ -56,14 +55,5 @@ prompt_dir() {
   prompt_segment blue black '%2~'
 }
 
-# Nix shell setup @babylon
-. /Users/giovanni.fantini/.nix-profile/etc/profile.d/nix.sh
-
-# QT pathing @babylon
-export PATH="/Users/giovanni.fantini/Qt5.5.0/5.5/clang_64/bin/:$PATH"
-
-# Open SSL path @babylon
-export LIBRARY_PATH="$LIBRARY_PATH:/usr/local/opt/openssl/lib/"
-
-# Manifest pathing @babylon
-export SHIPCAT_MANIFEST_DIR="/Users/giovanni.fantini/manifests"
+# Source babylon specific info
+source ~/.babylon.sh

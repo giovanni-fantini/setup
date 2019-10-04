@@ -6,3 +6,6 @@ config/application.yml
 
 # Authentication info
 authinfo.yml
+
+# Babylon info
+.babylon.sh
