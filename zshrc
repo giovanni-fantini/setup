@@ -29,12 +29,6 @@ export PATH="./bin:./node_modules/.bin:${PATH}:/usr/local/sbin"
 # Store your own aliases in the ~/.aliases file and load the here.
 [[ -f "$HOME/.aliases" ]] && source "$HOME/.aliases"
 
-# Encoding stuff for the terminal
-export LANG=en_US.UTF-8
-export LC_ALL=en_US.UTF-8
-
-export BUNDLER_EDITOR="subl $@ >/dev/null 2>&1 -a"
-
 # uncomment for WSL
 # export DISPLAY=:0
 # sudo /etc/init.d/postgresql start
@@ -55,5 +49,11 @@ prompt_dir() {
   prompt_segment blue black '%2~'
 }
 
-# Source babylon specific info
-source ~/.babylon.sh
+# Kubectl autocomplete
+if [ $commands[kubectl] ]; then source <(kubectl completion zsh); fi
+
+# Python related
+if command -v pyenv 1>/dev/null 2>&1; then
+  eval "$(pyenv init -)"
+fi
+
