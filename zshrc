@@ -16,6 +16,7 @@ export HOMEBREW_NO_ANALYTICS=1
 # Actually load Oh-My-Zsh
 source "${ZSH}/oh-my-zsh.sh"
 unalias rm # No interactive rm by default (brought by plugins/common-aliases)
+alias rspec='nocorrect rspec'
 
 # Load rbenv if installed
 export PATH="${HOME}/.rbenv/bin:${PATH}"
@@ -57,4 +58,5 @@ if command -v pyenv 1>/dev/null 2>&1; then
   eval "$(pyenv init -)"
 fi
 
+# Source job specific config
 source ~/.deliveroo.sh
