@@ -54,7 +54,7 @@ zsh install.sh
 - Fetch the fonts repo using `git submodule init && git submodule update`
 - Open .itermcolors file
 ### Add iterm profile
-- Import iterm_profile.json in iTerm
+- Import mac_iterm_profile.json in iTerm
 ### VS Code
 - [Install VS Code](https://code.visualstudio.com/docs?dv=osx)
 - Go to Settings Sync -> Configure
@@ -64,6 +64,14 @@ zsh install.sh
 ~
 gem install bundler
 gem install rails
+```
+
+### Add a new config file for the job (i.e. Deliveroo)
+```zsh
+~
+touch .deliveroo.sh
+echo 'alias deliverooconfig="vim ~/.deliveroo.sh' >> ~/.aliases
+echo 'source ~/.deliveroo.sh' >> ~/.zshrc
 ```
 ### Online guides and resources:
 - MacOS guide for terminal customization: https://gist.github.com/kevin-smets/8568070

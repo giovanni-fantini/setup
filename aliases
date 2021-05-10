@@ -9,6 +9,7 @@ alias serve='ruby -run -e httpd . -p 8000'  # Or python -m SimpleHTTPServer :)
 # Configs
 alias zshconfig="vim ~/.zshrc"
 alias aliasconfig="vim ~/.aliases"
+alias deliverooconfig="vim ~/.deliveroo.sh"
 
 # Dev snippets
 rubocopdiff() {
