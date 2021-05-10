@@ -34,9 +34,9 @@ export PATH="./bin:./node_modules/.bin:${PATH}:/usr/local/sbin"
 # sudo /etc/init.d/postgresql start
 
 # Terminal colors for WSL
-if [ -f ~/.dir_colors ]; then  
-  eval `dircolors ~/.dir_colors`
-fi
+# if [ -f ~/.dir_colors ]; then  
+#   eval `dircolors ~/.dir_colors`
+# fi
 
 # Agnoster prompt setup
 prompt_context() {

@@ -1,11 +1,5 @@
 # Mac OSX Finder hidden files
 .DS_Store
 
-# Figaro gem
-config/application.yml
-
-# Authentication info
-authinfo.yml
-
-# Babylon info
-.babylon.sh
+# Deliveroo info
+.deliveroo.sh
