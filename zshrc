@@ -13,7 +13,7 @@ setopt correct_all
 # Prevent Homebrew from reporting - https://github.com/Homebrew/brew/blob/master/share/doc/homebrew/Analytics.md
 export HOMEBREW_NO_ANALYTICS=1
 
-# Actually load Oh-My-Zsh
+# Oh-My-Zsh
 source "${ZSH}/oh-my-zsh.sh"
 unalias rm # No interactive rm by default (brought by plugins/common-aliases)
 alias rspec='nocorrect rspec'
@@ -49,6 +49,8 @@ prompt_context() {
 prompt_dir() {
   prompt_segment blue black '%2~'
 }
+
+prompt_aws(){}
 
 # Kubectl autocomplete
 if [ $commands[kubectl] ]; then source <(kubectl completion zsh); fi

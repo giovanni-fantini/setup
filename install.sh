@@ -38,4 +38,8 @@ if [ ! -d "$ZSH_PLUGINS_DIR/zsh-syntax-highlighting" ]; then
 fi
 cd "$CURRENT_DIR"
 
+# create TerminalLogs dir
+cd "~"
+mkdir "TerminalLogs"
+
 zsh ~/.zshrc
