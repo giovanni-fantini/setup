@@ -31,13 +31,13 @@ export PATH="./bin:./node_modules/.bin:${PATH}:/usr/local/sbin"
 [[ -f "$HOME/.aliases" ]] && source "$HOME/.aliases"
 
 # uncomment for WSL
-# export DISPLAY=:0
-# sudo /etc/init.d/postgresql start
+export DISPLAY=:0
+sudo /etc/init.d/postgresql start
 
 # Terminal colors for WSL
-# if [ -f ~/.dir_colors ]; then  
-#   eval `dircolors ~/.dir_colors`
-# fi
+if [ -f ~/.dir_colors ]; then  
+  eval `dircolors ~/.dir_colors`
+fi
 
 # Agnoster prompt setup
 prompt_context() {
@@ -61,4 +61,3 @@ if command -v pyenv 1>/dev/null 2>&1; then
 fi
 
 # Source job specific config
-source ~/.deliveroo.sh

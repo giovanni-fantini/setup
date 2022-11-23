@@ -10,7 +10,6 @@ alias rspec='bundle exec rspec'
 # Configs
 alias zshconfig="vim ~/.zshrc"
 alias aliasconfig="vim ~/.aliases"
-alias deliverooconfig="vim ~/.deliveroo.sh"
 
 # Dev snippets
 rubocopdiff() {
