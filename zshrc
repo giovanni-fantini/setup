@@ -7,7 +7,7 @@ ZSH=$HOME/.oh-my-zsh
 ZSH_THEME="agnoster"
 
 # Plugins and generic ZSH setup
-plugins=(zsh-autosuggestions z git gitfast last-working-dir common-aliases zsh-syntax-highlighting history-substring-search ssh-agent)
+plugins=(zsh-autosuggestions z git gitfast last-working-dir common-aliases zsh-syntax-highlighting history-substring-search ssh-agent pyenv)
 setopt correct_all
 
 # Prevent Homebrew from reporting - https://github.com/Homebrew/brew/blob/master/share/doc/homebrew/Analytics.md
@@ -54,10 +54,5 @@ prompt_aws(){}
 
 # Kubectl autocomplete
 if [ $commands[kubectl] ]; then source <(kubectl completion zsh); fi
-
-# Python related
-if command -v pyenv 1>/dev/null 2>&1; then
-  eval "$(pyenv init -)"
-fi
 
 # Source job specific config
