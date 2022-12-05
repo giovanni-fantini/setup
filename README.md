@@ -49,6 +49,7 @@ rbenv global 3.0.1
 brew install pyenv
 pyenv install 3.10
 pyenv global 3.10.x
+pip install pipenv
 ```
 ### Installation script
 - Run installation script (to be modified with full setup)
