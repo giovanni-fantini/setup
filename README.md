@@ -43,6 +43,13 @@ brew install rbenv
 rbenv install 3.0.1
 rbenv global 3.0.1
 ```
+
+### Install Rbenv and latest stable Ruby (3.10.x at time of writing)
+```zsh
+brew install pyenv
+pyenv install 3.10
+pyenv global 3.10.x
+```
 ### Installation script
 - Run installation script (to be modified with full setup)
 ```zsh
