@@ -3,9 +3,12 @@ alias ip="curl ipinfo.io/ip"
 alias ips="ifconfig -a | perl -nle'/(\d+\.\d+\.\d+\.\d+)/ && print $1'"
 alias speedtest="wget -O /dev/null http://speedtest.wdc01.softlayer.com/downloads/test10.zip"
 
-# Language related
+# Ruby related
 alias serve='ruby -run -e httpd . -p 8000'  # Or python -m SimpleHTTPServer :)
 alias rspec='bundle exec rspec'
+
+# Python related
+alias pyman='python manage.py $1'
 
 # Configs
 alias zshconfig="vim ~/.zshrc"
@@ -15,6 +18,11 @@ alias aliasconfig="vim ~/.aliases"
 rubocopdiff() {
 git diff-tree -r --relative --no-commit-id --name-only --diff-filter=d $1@\{u\} HEAD -- ':(exclude)*schema.rb' |
 xargs rubocop -a
+}
+
+django_delete_migrations() {
+find . -path "*/migrations/*.py" -not -name "__init__.py" -delete
+find . -path "*/migrations/*.pyc" -delete
 }
 
 gitprune() {
