@@ -9,6 +9,7 @@ eval "$(ssh-agent -s)"
 touch ~/.ssh/config
 vim ~/.ssh/config
 ```
+
 Paste the following in the file:
 ```
 Host *
@@ -16,6 +17,7 @@ Host *
   UseKeychain yes
   IdentityFile ~/.ssh/id_ed25519
 ```
+
 Run
 ```zsh
 ssh-add -K ~/.ssh/id_ed25519
@@ -96,3 +98,39 @@ echo 'source ~/.deliveroo.sh' >> ~/.zshrc
 
 ### Online guides and resources
 - Linux guide for terminal customization: https://maxim-danilov.github.io/make-linux-terminal-great-again/
+- Guide for ZSH on WSL: https://blog.joaograssi.com/windows-subsystem-for-linux-with-oh-my-zsh-conemu/
+
+### Installation
+- Enable WSL
+- Install Ubuntu via Microsoft Store
+
+```powershell
+~
+wsl --set-default-version 2
+wsl --set-default Ubuntu
+```
+
+### Run Ubuntu and user config
+- Add UNIX user: gio
+```powershell
+~
+Ubuntu config --default-user gio
+```
+
+### Upgrade packages & install ZSH
+```zsh
+~
+sudo apt update
+sudo apt upgrade
+sudo apt install zsh
+```
+
+### Add SSH and connection to GitHub
+```zsh
+~
+ssh-keygen -t ed25519 -C "fantini.giovanni@gmail.com"
+eval "$(ssh-agent -s)"
+ssh-add ~/.ssh/id_ed25519
+vim ~/.ssh/id_ed25519.pub
+```
+Copy ssh key and add to GitHub
