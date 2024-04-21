@@ -53,7 +53,7 @@ prompt_dir() {
 prompt_aws(){}
 
 # Kubectl autocomplete
-if [ $commands[kubectl] ]; then source <(kubectl completion zsh); fi
+#if [ $commands[kubectl] ]; then source <(kubectl completion zsh); fi
 
 # Source job specific config
 
