@@ -32,9 +32,12 @@ CURRENT_DIR=`pwd`
 ZSH_PLUGINS_DIR="$HOME/.oh-my-zsh/custom/plugins"
 mkdir -p "$ZSH_PLUGINS_DIR" && cd "$ZSH_PLUGINS_DIR"
 if [ ! -d "$ZSH_PLUGINS_DIR/zsh-syntax-highlighting" ]; then
-  echo "-----> Installing zsh plugins 'zsh-autosuggestions and 'zsh-syntax-highlighting'..."
-  git clone git@github.com:zsh-users/zsh-autosuggestions.git
+  echo "-----> Installing zsh plugin 'zsh-syntax-highlighting'..."
   git clone git@github.com:zsh-users/zsh-syntax-highlighting.git
+fi
+if [ ! -d "$ZSH_PLUGINS_DIR/zsh-autosuggestions" ]; then
+  echo "-----> Installing zsh plugin 'zsh-autosuggestions'..."
+  git clone git@github.com:zsh-users/zsh-autosuggestions.git
 fi
 cd "$CURRENT_DIR"
 
@@ -42,4 +45,4 @@ cd "$CURRENT_DIR"
 cd "~"
 mkdir "TerminalLogs"
 
-zsh ~/.zshrc
+source ~/.zshrc
