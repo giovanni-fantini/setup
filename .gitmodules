@@ -1,6 +1,3 @@
-[submodule "fonts"]
-	path = fonts
-	url = https://github.com/powerline/fonts/
 [submodule "assets/fonts"]
 	path = assets/fonts
 	url = https://github.com/powerline/fonts/
