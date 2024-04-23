@@ -1,3 +1,6 @@
+# ZSH-related
+unalias rm # No interactive rm by default (brought by plugins/common-aliases)
+
 # Get External IP / local IPs
 alias ip="curl ipinfo.io/ip"
 alias ips="ifconfig -a | perl -nle'/(\d+\.\d+\.\d+\.\d+)/ && print $1'"
