@@ -15,8 +15,6 @@ export HOMEBREW_NO_ANALYTICS=1
 
 # Oh-My-Zsh
 source "${ZSH}/oh-my-zsh.sh"
-unalias rm # No interactive rm by default (brought by plugins/common-aliases)
-alias rspec='nocorrect rspec'
 
 # Load rbenv if installed
 export PATH="${HOME}/.rbenv/bin:${PATH}"
