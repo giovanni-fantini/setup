@@ -3,7 +3,7 @@
 ### Git & Github
 ```bash
 # Generate SSH key (use work email if needed)
-ssh-keygen -t ed25519 -C "fantini.giovanni@gmail.com"
+ssh-keygen -t ed25519 -C {EMAIL}
 # Add ssh key to ssh-agent
 eval "$(ssh-agent -s)"
 touch ~/.ssh/config
@@ -21,8 +21,9 @@ Host *
 Run
 ```bash
 ssh-add -K ~/.ssh/id_ed25519
+vim ~/.ssh/id_ed25519.pub
 ```
-Finally add the key to Github SSH key settings (turn SSO on if required)
+Copy the key that shows up and add to GitHub
 
 ### Install homebrew
 ```bash
@@ -96,9 +97,9 @@ pip install pipenv
 ### Add a new config file for the job (i.e. Deliveroo)
 ```zsh
 ~
-touch .deliveroo.sh
-echo 'alias deliverooconfig="vim ~/.deliveroo.sh' >> ~/.aliases
-echo 'source ~/.deliveroo.sh' >> ~/.zshrc
+touch .{ORGANISATION}.sh
+echo 'alias {ORGANISATION}config="vim ~/.deliveroo.sh' >> ~/.aliases
+echo 'source ~/.{ORGANISATION}.sh' >> ~/.zshrc
 ```
 
 ### Online guides and resources:
@@ -126,7 +127,7 @@ Ubuntu config --default-user gio
 ### Git & Github
 ```bash
 # Generate SSH key (use work email if needed)
-ssh-keygen -t ed25519 -C "fantini.giovanni@gmail.com"
+ssh-keygen -t ed25519 -C {EMAIL}
 # Add ssh key to ssh-agent
 eval "$(ssh-agent -s)"
 touch ~/.ssh/config
@@ -144,8 +145,9 @@ Host *
 Run
 ```bash
 ssh-add -K ~/.ssh/id_ed25519
+vim ~/.ssh/id_ed25519.pub
 ```
-Finally add the key to Github SSH key settings (turn SSO on if required)
+Copy the key that shows up and add to GitHub
 
 ### Shell setup
 ```bash
