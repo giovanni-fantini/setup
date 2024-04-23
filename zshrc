@@ -30,15 +30,6 @@ export PATH="./bin:./node_modules/.bin:${PATH}:/usr/local/sbin"
 # Store your own aliases in the ~/.aliases file and load the here.
 [[ -f "$HOME/.aliases" ]] && source "$HOME/.aliases"
 
-# uncomment for WSL
-export DISPLAY=:0
-sudo /etc/init.d/postgresql start
-
-# Terminal colors for WSL
-if [ -f ~/.dir_colors ]; then  
-  eval `dircolors ~/.dir_colors`
-fi
-
 # Agnoster prompt setup
 prompt_context() {
   if [[ -n "$SSH_CLIENT" ]]; then
