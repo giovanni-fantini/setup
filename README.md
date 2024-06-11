@@ -184,7 +184,13 @@ libbz2-dev libreadline-dev libsqlite3-dev curl git \
 libncursesw5-dev xz-utils tk-dev libxml2-dev libxmlsec1-dev libffi-dev liblzma-dev
 pyenv install 3.12.4
 pyenv global 3.12.4
-pip install pipenv
+pip install poetry
+```
+
+### Install NVM and latest stable Node.js
+```zsh
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/master/install.sh | bash
+nvm install --lts
 ```
 ---
 
