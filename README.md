@@ -175,9 +175,20 @@ zsh install.sh
 Remove-Item -Path $Env:LocalAppData\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json -Force –Recurse
 New-Item -ItemType SymbolicLink -Path "$Env:LocalAppData\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json" -Target "\\wsl.localhost\Ubuntu\home\gio\code\setup\assets\windows_terminal_profile.json"
 ```
+
+### Install Pyenv and latest stable Python (3.12.4 at time of writing)
+```zsh
+curl https://pyenv.run | bash
+sudo apt update; sudo apt install build-essential libssl-dev zlib1g-dev \
+libbz2-dev libreadline-dev libsqlite3-dev curl git \
+libncursesw5-dev xz-utils tk-dev libxml2-dev libxmlsec1-dev libffi-dev liblzma-dev
+pyenv install 3.12.4
+pyenv global 3.12.4
+pip install pipenv
+```
 ---
 
 ## Improvements
-- Import packages (shell, ruby, python, node)
-- Add all steps to install
-- Duplicate install for WSL and Mac
+- Import packages files (shell, ruby, python, node)
+- Add all steps to install script
+- Split install scrit for WSL and Mac

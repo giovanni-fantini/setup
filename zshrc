@@ -6,6 +6,25 @@ ZSH=$HOME/.oh-my-zsh
 #   https://github.com/robbyrussell/oh-my-zsh/wiki/themes
 ZSH_THEME="agnoster"
 
+# Load rbenv if installed
+export PATH="${HOME}/.rbenv/bin:${PATH}"
+type -a rbenv > /dev/null && eval "$(rbenv init -)"
+
+# Rails and Ruby uses the local `bin` folder to store binstubs.
+# So instead of running `bin/rails` like the doc says, just run `rails`
+# Same for `./node_modules/.bin` and nodejs
+export PATH="./bin:./node_modules/.bin:${PATH}:/usr/local/sbin"
+
+# Node.js and NVM setup
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+# Python setup
+export PYENV_ROOT="$HOME/.pyenv"
+command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
+eval "$(pyenv init -)"
+
 # Plugins and generic ZSH setup
 plugins=(zsh-autosuggestions z git gitfast last-working-dir common-aliases zsh-syntax-highlighting history-substring-search ssh-agent pyenv)
 setopt correct_all
@@ -15,15 +34,6 @@ export HOMEBREW_NO_ANALYTICS=1
 
 # Oh-My-Zsh
 source "${ZSH}/oh-my-zsh.sh"
-
-# Load rbenv if installed
-export PATH="${HOME}/.rbenv/bin:${PATH}"
-type -a rbenv > /dev/null && eval "$(rbenv init -)"
-
-# Rails and Ruby uses the local `bin` folder to store binstubs.
-# So instead of running `bin/rails` like the doc says, just run `rails`
-# Same for `./node_modules/.bin` and nodejs
-export PATH="./bin:./node_modules/.bin:${PATH}:/usr/local/sbin"
 
 # Store your own aliases in the ~/.aliases file and load the here.
 [[ -f "$HOME/.aliases" ]] && source "$HOME/.aliases"
@@ -46,8 +56,3 @@ if [ $commands[kubectl] ]; then source <(kubectl completion zsh); fi
 
 # Source job specific config
 # e.g. source ~/.deliverooconfig
-
-# Node.js and NVM setup
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
