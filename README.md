@@ -1,9 +1,9 @@
 # Dev Environment Setup Instructions
 ## MacOS
 ### Git & Github
-```zsh
+```bash
 # Generate SSH key (use work email if needed)
-ssh-keygen -t ed25519 -C "fantini.giovanni@gmail.com"
+ssh-keygen -t ed25519 -C {EMAIL}
 # Add ssh key to ssh-agent
 eval "$(ssh-agent -s)"
 touch ~/.ssh/config
@@ -19,35 +19,67 @@ Host *
 ```
 
 Run
-```zsh
+```bash
 ssh-add -K ~/.ssh/id_ed25519
+vim ~/.ssh/id_ed25519.pub
 ```
-
-Finally add the key to Github SSH key settings (turn SSO on if required)
+Copy the key that shows up and add to GitHub
 
 ### Install homebrew
-```zsh
+```bash
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 ```
-### Install iTerm2
-```zsh
-brew install --cask iterm2
-```
-### Zsh + Oh-my-zsh installs
-```zsh
+
+### Shell setup
+```bash
 which zsh || brew install zsh
-chsh -s $(which zsh)
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
+chsh -s $(which zsh)
 ```
+
+### Installation script
+```zsh
+~
+mkdir code
+cd code
+git clone git@github.com:giovanni-fantini/setup.git
+zsh install.sh
+```
+
+### iTerm2 setup
+- Agnoster is the theme of choice. It's already selected in the zshrc
+```zsh
+~
+brew install --cask iterm2
+cd ~/code/setup/assets
+git submodule init && git submodule update
+```
+- Open .itermcolors file
+- Import mac_iterm_profile.json in iTerm
+
+### VS Code setup
+- [Install VS Code](https://code.visualstudio.com/docs?dv=osx)
+- Go to Settings Sync -> Configure
+- Go to Shell command: add code command in Path
+
 ### Install Rbenv and latest stable Ruby (3.0.1 at time of writing)
 ```zsh
+~
 brew install rbenv
 rbenv install 3.0.1
 rbenv global 3.0.1
 ```
 
+### Add bundler and Rails
+```zsh
+~
+gem install bundler
+gem install rails
+```
+
 ### Install Pyenv and latest stable Python (3.10.x at time of writing)
 ```zsh
+~
 brew install pyenv
 pyenv install 3.10
 pyenv global 3.10.x
@@ -58,36 +90,18 @@ pip install pipenv
 ```zsh
 ```
 
-### Installation script
-- Run installation script (to be modified with full setup)
+### Install databases
 ```zsh
-cd setup
-zsh install.sh
-```
-### Agnoster theme + powerline fonts installs
-- Agnoster is the theme of choice. It's already selected in the zshrc
-- Fetch the fonts repo using `git submodule init && git submodule update`
-- Open .itermcolors file
-### Add iterm profile
-- Import mac_iterm_profile.json in iTerm
-### VS Code
-- [Install VS Code](https://code.visualstudio.com/docs?dv=osx)
-- Go to Settings Sync -> Configure
-- Go to Shell command: add code command in Path
-### Add bundler and Rails
-```zsh
-~
-gem install bundler
-gem install rails
 ```
 
 ### Add a new config file for the job (i.e. Deliveroo)
 ```zsh
 ~
-touch .deliveroo.sh
-echo 'alias deliverooconfig="vim ~/.deliveroo.sh' >> ~/.aliases
-echo 'source ~/.deliveroo.sh' >> ~/.zshrc
+touch .{ORGANISATION}.sh
+echo 'alias {ORGANISATION}config="vim ~/.deliveroo.sh' >> ~/.aliases
+echo 'source ~/.{ORGANISATION}.sh' >> ~/.zshrc
 ```
+
 ### Online guides and resources:
 - MacOS guide for terminal customization: https://gist.github.com/kevin-smets/8568070
 - Powerline fonts: https://github.com/powerline/fonts/
@@ -95,42 +109,75 @@ echo 'source ~/.deliveroo.sh' >> ~/.zshrc
 - VS Code for Mac: https://code.visualstudio.com/docs/setup/mac
 ---
 ## WSL
-
-### Online guides and resources
-- Linux guide for terminal customization: https://maxim-danilov.github.io/make-linux-terminal-great-again/
-- Guide for ZSH on WSL: https://blog.joaograssi.com/windows-subsystem-for-linux-with-oh-my-zsh-conemu/
-
 ### Installation
 - Enable WSL
 - Install Ubuntu via Microsoft Store
 
-```powershell
-~
+```PowerShell
 wsl --set-default-version 2
 wsl --set-default Ubuntu
 ```
 
-### Run Ubuntu and user config
+### Ubuntu setup
 - Add UNIX user: gio
-```powershell
-~
+```PowerShell
 Ubuntu config --default-user gio
 ```
 
-### Upgrade packages & install ZSH
-```zsh
+### Git & Github
+```bash
+# Generate SSH key (use work email if needed)
+ssh-keygen -t ed25519 -C {EMAIL}
+# Add ssh key to ssh-agent
+eval "$(ssh-agent -s)"
+touch ~/.ssh/config
+vim ~/.ssh/config
+```
+
+Paste the following in the file:
+```
+Host *
+  AddKeysToAgent yes
+  UseKeychain yes
+  IdentityFile ~/.ssh/id_ed25519
+```
+
+Run
+```bash
+ssh-add -K ~/.ssh/id_ed25519
+vim ~/.ssh/id_ed25519.pub
+```
+Copy the key that shows up and add to GitHub
+
+### Shell setup
+```bash
 ~
 sudo apt update
 sudo apt upgrade
 sudo apt install zsh
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
+chsh -s $(which zsh)
 ```
 
-### Add SSH and connection to GitHub
+### Installation script
 ```zsh
 ~
-ssh-keygen -t ed25519 -C "fantini.giovanni@gmail.com"
-eval "$(ssh-agent -s)"
-ssh-add ~/.ssh/id_ed25519
-vim ~/.ssh/id_ed25519.pub
+mkdir code
+cd code
+git clone git@github.com:giovanni-fantini/setup.git
+zsh install.sh
 ```
-Copy ssh key and add to GitHub
+
+### Windows Terminal setup
+- Install Windows Terminal via Microsoft Store
+- Agnoster is the theme of choice. It's already selected in the zshrc
+```PowerShell
+Remove-Item -Path $Env:LocalAppData\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json -Force –Recurse
+New-Item -ItemType SymbolicLink -Path "$Env:LocalAppData\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json" -Target "\\wsl.localhost\Ubuntu\home\gio\code\setup\assets\windows_terminal_profile.json"
+```
+---
+
+## Improvements
+- Import packages (shell, ruby, python, node)
+- Add all steps to install
+- Duplicate install for WSL and Mac
