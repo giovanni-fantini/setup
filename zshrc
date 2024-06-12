@@ -56,3 +56,6 @@ if [ $commands[kubectl] ]; then source <(kubectl completion zsh); fi
 
 # Source job specific config
 # e.g. source ~/.deliverooconfig
+
+# Start DB processes - UNCOMMENT RELEVANT ROW
+# sudo systemctl start mongod # MongoDb
