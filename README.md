@@ -229,13 +229,10 @@ curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/master/install.sh | bash
 nvm install --lts
 ```
 
-### Install DBs (MongoDb & PostgreSQL)
+### Install Docker
 
-```zsh
-echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-7.0.gpg ] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/7.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-7.0.list
-sudo apt install -y mongodb-org
-sudo apt install postgresql
-```
+- Install Docker Desktop for Windows
+- Turn on "Use WSL 2 based engine" in settings
 
 ---
 
