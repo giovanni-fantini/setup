@@ -229,6 +229,18 @@ curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/master/install.sh | bash
 nvm install --lts
 ```
 
+### Install rbenv and latest stable Ruby
+
+```zsh
+sudo apt install libssl-dev libreadline-dev zlib1g-dev autoconf bison build-essential libyaml-dev libreadline-dev libncurses5-dev libffi-dev libgdbm-dev
+curl -fsSL https://github.com/rbenv/rbenv-installer/raw/HEAD/bin/rbenv-installer | bash
+rbenv install -l
+rbenv install VERSION
+rbenv global VERSION
+gem install bundler
+gem install rails
+```
+
 ### Install Docker
 
 - Install Docker Desktop for Windows
