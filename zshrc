@@ -24,6 +24,7 @@ export NVM_DIR="$HOME/.nvm"
 export PYENV_ROOT="$HOME/.pyenv"
 command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
 eval "$(pyenv init -)"
+poetry config virtualenvs.in-project true
 
 # Plugins and generic ZSH setup
 plugins=(zsh-autosuggestions z git gitfast last-working-dir common-aliases zsh-syntax-highlighting history-substring-search ssh-agent pyenv)
@@ -52,7 +53,7 @@ prompt_dir() {
 prompt_aws(){}
 
 # Kubectl autocomplete
-if [ $commands[kubectl] ]; then source <(kubectl completion zsh); fi
+# if [ $commands[kubectl] ]; then source <(kubectl completion zsh); fi
 
 # Source job specific config
 # e.g. source ~/.deliverooconfig
