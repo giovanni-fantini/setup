@@ -228,9 +228,6 @@ pip install poetry
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/master/install.sh | bash
 nvm install --lts
 npm install -g typescript
-npm install -g jest
-npm install -g ts-jest
-npm install -g @types/jest 
 ```
 
 ### Install rbenv and latest stable Ruby
@@ -243,7 +240,6 @@ rbenv install VERSION
 rbenv global VERSION
 gem install bundler
 gem install rails
-gem install rspec
 ```
 
 ### Install Docker
