@@ -82,7 +82,9 @@ git submodule init && git submodule update
 brew install pyenv
 pyenv install 3.13
 pyenv global 3.13
+exec zsh
 pip install poetry
+pip install --upgrade pip
 ```
 
 ### Install rbenv, LTS Ruby + bundler & rails
@@ -114,9 +116,13 @@ gem install rails
 
 ```zsh
 ~
-touch .{ORGANISATION}.sh
-echo 'alias {ORGANISATION}config="vim ~/.deliveroo.sh' >> ~/.aliases
-echo 'source ~/.{ORGANISATION}.sh' >> ~/.zshrc
+cd ~
+echo 'export ORGANISATION=name_of_company' >> ~/.zshrc
+exec zsh
+touch .${ORGANISATION}.sh
+echo "alias ${ORGANISATION}config=vim ~/.${ORGANISATION}.sh" >> ~/.aliases
+echo "source ~/.${ORGANISATION}.sh" >> ~/.zshrc
+exec zsh
 ```
 
 ### Online guides and resources
@@ -249,6 +255,19 @@ npm install -g typescript
 
 - Install Docker Desktop for Windows
 - Turn on "Use WSL 2 based engine" in settings
+
+### Add a new config file for the job (i.e. Deliveroo)
+
+```zsh
+~
+cd ~
+echo 'export ORGANISATION=name_of_company' >> ~/.zshrc
+exec zsh
+touch .${ORGANISATION}.sh
+echo "alias ${ORGANISATION}config=vim ~/.${ORGANISATION}.sh" >> ~/.aliases
+echo "source ~/.${ORGANISATION}.sh" >> ~/.zshrc
+exec zsh
+```
 
 ---
 

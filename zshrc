@@ -2,6 +2,9 @@ ZSH_DISABLE_COMPFIX=true
 
 ZSH=$HOME/.oh-my-zsh
 
+# Enable brew
+eval "$(/opt/homebrew/bin/brew shellenv)"
+
 # You can change the theme with another one 
 #   https://github.com/robbyrussell/oh-my-zsh/wiki/themes
 ZSH_THEME="agnoster"
@@ -55,8 +58,11 @@ prompt_aws(){}
 # Kubectl autocomplete
 # if [ $commands[kubectl] ]; then source <(kubectl completion zsh); fi
 
-# Source job specific config
-# e.g. source ~/.deliverooconfig
-
 # Start DB processes - UNCOMMENT RELEVANT ROW
 # sudo systemctl start mongod # MongoDb
+
+# THIS SHOULD ALWAYS BE LAST SECTION OF CONFIG FILE
+# Source job specific config
+# e.g. source ~/.deliverooconfig
+export ORGANISATION=complexio
+source ~/.complexio.sh
