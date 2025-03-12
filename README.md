@@ -25,7 +25,7 @@ Host *
 Run
 
 ```bash
-ssh-add -K ~/.ssh/id_ed25519
+ssh-add --apple-use-keychain ~/.ssh/id_ed25519
 vim ~/.ssh/id_ed25519.pub
 ```
 
@@ -35,6 +35,7 @@ Copy the key that shows up and add to GitHub
 
 ```bash
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+eval "$(/opt/homebrew/bin/brew shellenv)"
 ```
 
 ### Shell setup
@@ -52,7 +53,7 @@ chsh -s $(which zsh)
 mkdir code
 cd code
 git clone git@github.com:giovanni-fantini/setup.git
-zsh install.sh
+zsh setup/install.sh
 ```
 
 ### iTerm2 setup
@@ -66,8 +67,7 @@ cd ~/code/setup/assets
 git submodule init && git submodule update
 ```
 
-- Open .itermcolors file
-- Import mac_iterm_profile.json in iTerm
+- Open iTerm and import mac_iterm_profile.json
 
 ### VS Code setup
 
@@ -75,31 +75,26 @@ git submodule init && git submodule update
 - Go to Settings Sync -> Configure
 - Go to Shell command: add code command in Path
 
-### Install Rbenv and latest stable Ruby (3.0.1 at time of writing)
-
-```zsh
-~
-brew install rbenv
-rbenv install 3.0.1
-rbenv global 3.0.1
-```
-
-### Add bundler and Rails
-
-```zsh
-~
-gem install bundler
-gem install rails
-```
-
-### Install Pyenv and latest stable Python (3.10.x at time of writing)
+### Install Pyenv and latest stable Python (3.13 at time of writing)
 
 ```zsh
 ~
 brew install pyenv
-pyenv install 3.10
-pyenv global 3.10.x
-pip install pipenv
+pyenv install 3.13
+pyenv global 3.13
+pip install poetry
+```
+
+### Install rbenv, LTS Ruby + bundler & rails
+
+```zsh
+~
+brew install rbenv
+rbenv install -l
+rbenv install VERSION
+rbenv global VERSION
+gem install bundler
+gem install rails
 ```
 
 ### Install NVM and latest stable Node.js
@@ -111,6 +106,9 @@ pip install pipenv
 
 ```zsh
 ```
+
+### Install Docker
+
 
 ### Add a new config file for the job (i.e. Deliveroo)
 
@@ -222,15 +220,7 @@ pyenv global 3.12.4
 pip install poetry
 ```
 
-### Install NVM, LTS Node.js and TS
-
-```zsh
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/master/install.sh | bash
-nvm install --lts
-npm install -g typescript
-```
-
-### Install rbenv and latest stable Ruby
+### Install rbenv, LTS Ruby + bundler & rails
 
 ```zsh
 sudo apt install libssl-dev libreadline-dev zlib1g-dev autoconf bison build-essential libyaml-dev libreadline-dev libncurses5-dev libffi-dev libgdbm-dev
@@ -240,6 +230,19 @@ rbenv install VERSION
 rbenv global VERSION
 gem install bundler
 gem install rails
+```
+
+### Install NVM, LTS Node.js and TS
+
+```zsh
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/master/install.sh | bash
+nvm install --lts
+npm install -g typescript
+```
+
+### Install databases
+
+```zsh
 ```
 
 ### Install Docker
@@ -253,4 +256,4 @@ gem install rails
 
 - Import packages files (shell, ruby, python, node)
 - Add all steps to install script
-- Split install scrit for WSL and Mac
+- Split install script for WSL and Mac
