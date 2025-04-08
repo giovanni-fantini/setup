@@ -2,13 +2,14 @@
 
 ## MacOS
 
-### Git & Github
+### SSH and Github
 
 ```bash
 # Generate SSH key (use work email if needed)
 ssh-keygen -t ed25519 -C {EMAIL}
 # Add ssh key to ssh-agent
 eval "$(ssh-agent -s)"
+mkdir ~/.ssh
 touch ~/.ssh/config
 vim ~/.ssh/config
 ```
@@ -154,7 +155,7 @@ wsl --set-default Ubuntu
 Ubuntu config --default-user gio
 ```
 
-### Git & Github
+### SSH and Github
 
 ```bash
 # Generate SSH key (use work email if needed)
