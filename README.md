@@ -49,15 +49,12 @@ chsh -s $(which zsh)
 
 ### iTerm2 setup
 
-- Agnoster is the theme of choice. It's already selected in the zshrc
-
 ```zsh
 ~
 brew install --cask iterm2
-cd ~/code/setup/assets
-git submodule init && git submodule update
 ```
 
+- Agnoster is the theme of choice. It's already selected in the zshrc
 - Open iTerm and import mac_iterm_profile.json
 
 ### VS Code setup
