@@ -47,16 +47,6 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/mas
 chsh -s $(which zsh)
 ```
 
-### Installation script
-
-```zsh
-~
-mkdir code
-cd code
-git clone git@github.com:giovanni-fantini/setup.git
-zsh setup/install.sh
-```
-
 ### iTerm2 setup
 
 - Agnoster is the theme of choice. It's already selected in the zshrc
@@ -124,6 +114,16 @@ touch .${ORGANISATION}.sh
 echo "alias ${ORGANISATION}config=vim ~/.${ORGANISATION}.sh" >> ~/.aliases
 echo "source ~/.${ORGANISATION}.sh" >> ~/.zshrc
 exec zsh
+```
+
+### Installation script
+
+```zsh
+~
+mkdir code
+cd code
+git clone git@github.com:giovanni-fantini/setup.git
+zsh setup/install.sh
 ```
 
 ### Online guides and resources
