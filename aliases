@@ -33,4 +33,4 @@ git branch --merged master | grep -v '^[ *]*master$' | xargs git branch -d
 }
 
 # Job-related config (keep this heading as last of file)
-alias complexioconfig=vim ~/.complexio.sh
+alias complexioconfig="vim ~/.complexio.sh"

@@ -42,6 +42,6 @@ fi
 cd "$CURRENT_DIR"
 
 # create TerminalLogs dir
-mkdir "~/TerminalLogs"
+mkdir "$HOME/TerminalLogs"
 
 source ~/.zshrc
