@@ -27,7 +27,7 @@ export NVM_DIR="$HOME/.nvm"
 export PYENV_ROOT="$HOME/.pyenv"
 command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
 eval "$(pyenv init -)"
-poetry config virtualenvs.in-project true
+command -v poetry >/dev/null && poetry config virtualenvs.in-project true
 
 # Plugins and generic ZSH setup
 plugins=(zsh-autosuggestions z git gitfast last-working-dir common-aliases zsh-syntax-highlighting history-substring-search ssh-agent pyenv)
