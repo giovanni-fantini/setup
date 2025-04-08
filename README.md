@@ -108,8 +108,17 @@ cd ~
 echo 'export ORGANISATION=name_of_company' >> ~/.zshrc
 exec zsh
 touch .${ORGANISATION}.sh
-echo "alias ${ORGANISATION}config=vim ~/.${ORGANISATION}.sh" >> ~/.aliases
+echo 'alias ${ORGANISATION}config="vim ~/.${ORGANISATION}.sh"' >> ~/.aliases
 echo "source ~/.${ORGANISATION}.sh" >> ~/.zshrc
+exec zsh
+```
+
+- This is only required the first time setting up for a new company, for subsequent devices just run:
+
+```zsh
+~
+cd ~
+touch .${ORGANISATION}.sh
 exec zsh
 ```
 
