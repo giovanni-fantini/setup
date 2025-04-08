@@ -42,6 +42,9 @@ source "${ZSH}/oh-my-zsh.sh"
 # Store your own aliases in the ~/.aliases file and load the here.
 [[ -f "$HOME/.aliases" ]] && source "$HOME/.aliases"
 
+# Add VS Code command to Path
+export PATH="/Applications/Visual Studio Code.app/Contents/Resources/app/bin:$PATH"
+
 # Agnoster prompt setup
 prompt_context() {
   if [[ -n "$SSH_CLIENT" ]]; then
