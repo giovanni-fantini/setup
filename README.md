@@ -90,6 +90,9 @@ gem install rails
 ### Install NVM and latest stable Node.js
 
 ```zsh
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/master/install.sh | bash
+nvm install --lts
+npm install -g typescript
 ```
 
 ### Install databases
