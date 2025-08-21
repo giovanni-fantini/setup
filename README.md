@@ -32,6 +32,13 @@ vim ~/.ssh/id_ed25519.pub
 
 Copy the key that shows up and add to GitHub
 
+### Clone setup and configs
+```bash
+mkdir ~/code
+cd ~/code
+git clone git@github.com:giovanni-fantini/setup.git
+```
+
 ### Install homebrew
 
 ```bash
@@ -44,7 +51,7 @@ eval "$(/opt/homebrew/bin/brew shellenv)"
 ```bash
 which zsh || brew install zsh
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
-chsh -s $(which zsh)
+chsh -s $(which zsh) # mostly not needed
 ```
 
 ### iTerm2 setup
