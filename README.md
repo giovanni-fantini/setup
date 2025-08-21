@@ -32,11 +32,12 @@ vim ~/.ssh/id_ed25519.pub
 
 Copy the key that shows up and add to GitHub
 
-### Clone setup and configs
+### Clone and install setup
 ```bash
 mkdir ~/code
 cd ~/code
 git clone git@github.com:giovanni-fantini/setup.git
+zsh setup/install.sh
 ```
 
 ### Install homebrew
@@ -130,16 +131,6 @@ exec zsh
 cd ~
 touch .${ORGANISATION}.sh
 exec zsh
-```
-
-### Installation script
-
-```zsh
-~
-mkdir code
-cd code
-git clone git@github.com:giovanni-fantini/setup.git
-zsh setup/install.sh
 ```
 
 ### Online guides and resources
