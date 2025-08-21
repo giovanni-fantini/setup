@@ -67,5 +67,5 @@ prompt_aws(){}
 # THIS SHOULD ALWAYS BE LAST SECTION OF CONFIG FILE
 # Source job specific config
 # e.g. source ~/.deliverooconfig
-export ORGANISATION=complexio
-source ~/.complexio.sh
+export ORGANISATION=easol
+source ~/.easol.sh
