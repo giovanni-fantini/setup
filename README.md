@@ -32,6 +32,28 @@ vim ~/.ssh/id_ed25519.pub
 
 Copy the key that shows up and add to GitHub
 
+### Add a new config file for the job (i.e. Deliveroo)
+
+```zsh
+~
+zshconfig
+# edit "ORGANISATION=<<NAME_OF_COMPANY>>" and "source ~/.NAME_OF_COMPANY.sh"
+exec zsh
+touch ~/.${ORGANISATION}.sh
+aliasconfig
+# edit "companyconfig=~/.NAME_OF_COMPANY.sh"
+exec zsh
+```
+
+- This is only required the first time setting up for a new company, for subsequent devices just run:
+
+```zsh
+~
+cd ~
+touch .${ORGANISATION}.sh
+exec zsh
+```
+
 ### Clone and install setup
 ```bash
 mkdir ~/code
@@ -65,11 +87,11 @@ brew install --cask iterm2
 - Agnoster is the theme of choice. It's already selected in the zshrc
 - Open iTerm and import mac_iterm_profile.json
 
-### VS Code setup
+### IDE setup
 
 - [Install VS Code](https://code.visualstudio.com/docs?dv=osx)
 - Go to Settings Sync -> Configure
-- Go to Shell command: add code command in Path
+- [Install Cursor](https://cursor.com/downloads)
 
 ### Install Pyenv and latest stable Python (3.13 at time of writing)
 
@@ -109,29 +131,6 @@ npm install -g typescript
 ```
 
 ### Install Docker
-
-
-### Add a new config file for the job (i.e. Deliveroo)
-
-```zsh
-~
-cd ~
-echo 'export ORGANISATION=name_of_company' >> ~/.zshrc
-exec zsh
-touch .${ORGANISATION}.sh
-echo 'alias ${ORGANISATION}config="vim ~/.${ORGANISATION}.sh"' >> ~/.aliases
-echo "source ~/.${ORGANISATION}.sh" >> ~/.zshrc
-exec zsh
-```
-
-- This is only required the first time setting up for a new company, for subsequent devices just run:
-
-```zsh
-~
-cd ~
-touch .${ORGANISATION}.sh
-exec zsh
-```
 
 ### Online guides and resources
 
