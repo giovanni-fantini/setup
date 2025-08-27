@@ -96,25 +96,6 @@ wt-list() {
   git worktree list
 }
 
-# Show worktree prompt segment (for use in prompt)
-worktree_prompt_segment() {
-  local worktree_path
-  worktree_path=$(git worktree list --porcelain 2>/dev/null | grep "worktree" | while read -r line; do
-    local path=$(echo "$line" | cut -d' ' -f2)
-    if [[ "$PWD" == "$path"* ]]; then
-      local dirname=$(basename "$path")
-      if [[ "$dirname" == wt-* ]]; then
-        echo "[wt:${dirname#wt-}]"
-        return 0
-      fi
-    fi
-  done)
-  
-  if [ -n "$worktree_path" ]; then
-    echo "$worktree_path"
-  fi
-}
-
 # Get repository info for current directory
 wt-info() {
   local remote_url=$(git remote get-url origin 2>/dev/null)

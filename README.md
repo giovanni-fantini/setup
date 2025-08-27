@@ -67,8 +67,11 @@ The install script will automatically:
 
 - Create symlinks for all configuration files
 - Install required zsh plugins
+- Install essential development tools from `Brewfile` (macOS only)
 - Create necessary directories
 - Reload your shell configuration
+
+**Note**: The Brewfile only installs essential tools and applications (casks) not available by default on macOS. Optional tools like databases and utilities are commented out and can be installed separately if needed. Uncomment and rerun `brew bundle`. The script skips Brewfile installation on non-macOS systems (like WSL).
 
 ### Install homebrew
 

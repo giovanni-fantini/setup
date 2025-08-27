@@ -33,12 +33,14 @@ fi
 # Python setup
 export PYENV_ROOT="$HOME/.pyenv"
 command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
-eval "$(pyenv init -)"
+command -v pyenv >/dev/null && eval "$(pyenv init -)"
 command -v poetry >/dev/null && poetry config virtualenvs.in-project true
 
 # Plugins and generic ZSH setup
-plugins=(zsh-autosuggestions z git gitfast last-working-dir common-aliases zsh-syntax-highlighting history-substring-search ssh-agent pyenv)
-setopt correct_all
+plugins=(zsh-autosuggestions z git gitfast last-working-dir common-aliases zsh-syntax-highlighting history-substring-search ssh-agent)
+
+# Only add pyenv plugin if pyenv is available
+command -v pyenv >/dev/null && plugins+=(pyenv)
 
 # Prevent Homebrew from reporting - https://github.com/Homebrew/brew/blob/master/share/doc/homebrew/Analytics.md
 export HOMEBREW_NO_ANALYTICS=1
@@ -68,13 +70,7 @@ prompt_dir() {
 
 prompt_aws(){}
 
-# Add worktree indicator to prompt
-prompt_worktree() {
-  local worktree_info=$(worktree_prompt_segment)
-  if [[ -n "$worktree_info" ]]; then
-    prompt_segment yellow black "$worktree_info"
-  fi
-}
+
 
 # Kubectl autocomplete
 # if [ $commands[kubectl] ]; then source <(kubectl completion zsh); fi

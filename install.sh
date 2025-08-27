@@ -41,6 +41,18 @@ if [ ! -d "$ZSH_PLUGINS_DIR/zsh-autosuggestions" ]; then
 fi
 cd "$CURRENT_DIR"
 
+# Install dependencies from Brewfile (macOS only)
+if [[ "$OSTYPE" == "darwin"* ]] && command -v brew >/dev/null; then
+  echo "-----> Installing dependencies from Brewfile..."
+  brew bundle --file="$PWD/Brewfile"
+elif [[ "$OSTYPE" == "darwin"* ]] && ! command -v brew >/dev/null; then
+  echo "-----> Homebrew not found on macOS. Please install Homebrew first:"
+  echo "      /bin/bash -c \"\$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)\""
+  echo "      Then rerun this install script."
+elif [[ "$OSTYPE" != "darwin"* ]]; then
+  echo "-----> Skipping Brewfile installation (not on macOS)"
+fi
+
 # create TerminalLogs dir
 mkdir "$HOME/TerminalLogs"
 
