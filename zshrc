@@ -18,10 +18,17 @@ type -a rbenv > /dev/null && eval "$(rbenv init -)"
 # Same for `./node_modules/.bin` and nodejs
 export PATH="./bin:./node_modules/.bin:${PATH}:/usr/local/sbin"
 
-# Node.js and NVM setup
+# Node.js and NVM setup (supports both Homebrew and standard installation)
 export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+# Load nvm from Homebrew if available
+if [ -s "/opt/homebrew/opt/nvm/nvm.sh" ]; then
+  \. "/opt/homebrew/opt/nvm/nvm.sh"
+  [ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"
+# Fall back to standard installation
+elif [ -s "$NVM_DIR/nvm.sh" ]; then
+  \. "$NVM_DIR/nvm.sh"
+  [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+fi
 
 # Python setup
 export PYENV_ROOT="$HOME/.pyenv"
@@ -42,6 +49,9 @@ source "${ZSH}/oh-my-zsh.sh"
 # Store your own aliases in the ~/.aliases file and load the here.
 [[ -f "$HOME/.aliases" ]] && source "$HOME/.aliases"
 
+# Load AI development configuration
+[[ -f "$HOME/.aiconfig" ]] && source "$HOME/.aiconfig"
+
 # Add VS Code command to Path
 export PATH="/Applications/Visual Studio Code.app/Contents/Resources/app/bin:$PATH"
 
@@ -57,6 +67,14 @@ prompt_dir() {
 }
 
 prompt_aws(){}
+
+# Add worktree indicator to prompt
+prompt_worktree() {
+  local worktree_info=$(worktree_prompt_segment)
+  if [[ -n "$worktree_info" ]]; then
+    prompt_segment yellow black "$worktree_info"
+  fi
+}
 
 # Kubectl autocomplete
 # if [ $commands[kubectl] ]; then source <(kubectl completion zsh); fi

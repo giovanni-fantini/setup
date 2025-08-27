@@ -1,0 +1,213 @@
+# AI Development Configuration
+# Contains worktree helpers, Cursor integration, and other AI-assisted development tools
+
+# Git Worktree Helpers
+# Create a new worktree with dynamic repository detection and smart dependency installation
+wt-new() {
+  local task="$1"
+  [ -z "$task" ] && { echo "usage: wt-new <branch-name>"; return 1; }
+  
+  # Detect repository info dynamically
+  local remote_url=$(git remote get-url origin 2>/dev/null)
+  local default_branch=$(git symbolic-ref refs/remotes/origin/HEAD 2>/dev/null | sed 's@^refs/remotes/origin/@@')
+  
+  # Fallback to common branch names if detection fails
+  if [ -z "$default_branch" ]; then
+    if git show-ref --verify --quiet refs/remotes/origin/main; then
+      default_branch="main"
+    elif git show-ref --verify --quiet refs/remotes/origin/master; then
+      default_branch="master"
+    else
+      echo "Error: Could not determine default branch. Please ensure you have a remote 'origin' configured."
+      return 1
+    fi
+  fi
+  
+  echo "Creating worktree for branch: $task"
+  echo "Using default branch: $default_branch"
+  
+  git fetch origin && git worktree add -b "$task" "wt-$task" "origin/$default_branch"
+  
+  if [ $? -eq 0 ]; then
+    echo "Worktree created at ./wt-$task"
+    echo "Installing dependencies..."
+    
+    # Check if this is a Ruby project and install dependencies
+    if [ -f "wt-$task/Gemfile" ] && command -v bundle >/dev/null; then
+      echo "Detected Ruby project - running bundle install..."
+      (cd "wt-$task" && bundle install)
+    fi
+    
+    # Check if this is a Node.js project and install dependencies
+    if [ -f "wt-$task/package.json" ] && command -v yarn >/dev/null; then
+      echo "Detected Node.js project - running yarn install..."
+      (cd "wt-$task" && yarn install)
+    elif [ -f "wt-$task/package.json" ] && command -v npm >/dev/null; then
+      echo "Detected Node.js project - running npm install..."
+      (cd "wt-$task" && npm install)
+    fi
+    
+    # Check for Python projects
+    if [ -f "wt-$task/pyproject.toml" ] && command -v poetry >/dev/null; then
+      echo "Detected Poetry project - running poetry install..."
+      (cd "wt-$task" && poetry install)
+    elif [ -f "wt-$task/requirements.txt" ] && command -v pip >/dev/null; then
+      echo "Detected Python project - running pip install..."
+      (cd "wt-$task" && pip install -r requirements.txt)
+    fi
+    
+    echo "Worktree ready! Use 'wt-enter $task' to navigate to it."
+    echo "Repository: $remote_url"
+    echo "Default branch: $default_branch"
+  else
+    echo "Failed to create worktree"
+    return 1
+  fi
+}
+
+# Remove worktree + branch (after merge)
+wt-clean() {
+  local task="$1"
+  [ -z "$task" ] && { echo "usage: wt-clean <branch-name>"; return 1; }
+  
+  echo "Cleaning up worktree: $task"
+  git worktree remove "wt-$task" || return 1
+  git branch -d "$task" 2>/dev/null || echo "Branch not merged; use 'git branch -D $task' to force."
+  git fetch -p
+  echo "Worktree cleaned up!"
+}
+
+# Quick navigation to worktree
+wt-enter() {
+  local task="$1"
+  [ -z "$task" ] && { echo "usage: wt-enter <branch-name>"; return 1; }
+  
+  if [ -d "wt-$task" ]; then
+    cd "wt-$task"
+  else
+    echo "Worktree wt-$task not found. Use 'wt-new $task' to create it."
+    return 1
+  fi
+}
+
+# List all worktrees
+wt-list() {
+  echo "Active worktrees:"
+  git worktree list
+}
+
+# Show worktree prompt segment (for use in prompt)
+worktree_prompt_segment() {
+  local worktree_path
+  worktree_path=$(git worktree list --porcelain 2>/dev/null | grep "worktree" | while read -r line; do
+    local path=$(echo "$line" | cut -d' ' -f2)
+    if [[ "$PWD" == "$path"* ]]; then
+      local dirname=$(basename "$path")
+      if [[ "$dirname" == wt-* ]]; then
+        echo "[wt:${dirname#wt-}]"
+        return 0
+      fi
+    fi
+  done)
+  
+  if [ -n "$worktree_path" ]; then
+    echo "$worktree_path"
+  fi
+}
+
+# Get repository info for current directory
+wt-info() {
+  local remote_url=$(git remote get-url origin 2>/dev/null)
+  local default_branch=$(git symbolic-ref refs/remotes/origin/HEAD 2>/dev/null | sed 's@^refs/remotes/origin/@@')
+  local current_branch=$(git branch --show-current 2>/dev/null)
+  
+  echo "Repository Information:"
+  echo "  Remote URL: $remote_url"
+  echo "  Default branch: $default_branch"
+  echo "  Current branch: $current_branch"
+  echo "  Project type: $(wt-detect-project-type)"
+}
+
+# Detect project type based on files present
+wt-detect-project-type() {
+  local types=()
+  
+  if [ -f "Gemfile" ]; then
+    types+=("Ruby")
+  fi
+  
+  if [ -f "package.json" ]; then
+    types+=("Node.js")
+  fi
+  
+  if [ -f "pyproject.toml" ]; then
+    types+=("Python (Poetry)")
+  elif [ -f "requirements.txt" ]; then
+    types+=("Python (pip)")
+  fi
+  
+  if [ ${#types[@]} -eq 0 ]; then
+    echo "Unknown"
+  else
+    echo "${types[*]}"
+  fi
+}
+
+# Cursor-specific helpers
+cursor-open-worktree() {
+  local task="$1"
+  [ -z "$task" ] && { echo "usage: cursor-open-worktree <branch-name>"; return 1; }
+  
+  if [ -d "wt-$task" ]; then
+    echo "Opening Cursor with worktree: wt-$task"
+    cursor "wt-$task"
+  else
+    echo "Worktree wt-$task not found. Use 'wt-new $task' to create it."
+    return 1
+  fi
+}
+
+# Claude/Anthropic helpers (placeholder for future Claude integration)
+claude-analyze() {
+  local file="$1"
+  [ -z "$file" ] && { echo "usage: claude-analyze <file>"; return 1; }
+  
+  if [ -f "$file" ]; then
+    echo "Analyzing $file with Claude..."
+    # Future integration with Claude API
+    echo "Claude analysis feature coming soon..."
+  else
+    echo "File $file not found."
+    return 1
+  fi
+}
+
+# AI development environment setup
+ai-setup() {
+  echo "Setting up AI development environment..."
+  
+  # Check for required tools
+  local missing_tools=()
+  
+  if ! command -v git >/dev/null; then
+    missing_tools+=("git")
+  fi
+  
+  if ! command -v cursor >/dev/null; then
+    echo "Warning: Cursor not found in PATH. Install from https://cursor.com/downloads"
+  fi
+  
+  if [ ${#missing_tools[@]} -gt 0 ]; then
+    echo "Missing required tools: ${missing_tools[*]}"
+    return 1
+  fi
+  
+  echo "AI development environment ready!"
+  echo "Available commands:"
+  echo "  wt-new <branch>     - Create new worktree"
+  echo "  wt-enter <branch>   - Navigate to worktree"
+  echo "  wt-clean <branch>   - Clean up worktree"
+  echo "  wt-list            - List worktrees"
+  echo "  wt-info            - Show repo info"
+  echo "  cursor-open-worktree <branch> - Open worktree in Cursor"
+}

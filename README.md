@@ -55,12 +55,20 @@ exec zsh
 ```
 
 ### Clone and install setup
+
 ```bash
 mkdir ~/code
 cd ~/code
 git clone git@github.com:giovanni-fantini/setup.git
 zsh setup/install.sh
 ```
+
+The install script will automatically:
+
+- Create symlinks for all configuration files
+- Install required zsh plugins
+- Create necessary directories
+- Reload your shell configuration
 
 ### Install homebrew
 
@@ -275,6 +283,144 @@ echo "alias ${ORGANISATION}config=vim ~/.${ORGANISATION}.sh" >> ~/.aliases
 echo "source ~/.${ORGANISATION}.sh" >> ~/.zshrc
 exec zsh
 ```
+
+---
+
+## AI Development Configuration
+
+This setup includes AI-assisted development tools and Git worktree helpers for parallel development with Cursor agents. The workflow allows you to work on multiple tasks simultaneously while maintaining clean separation and easy PR management.
+
+### Configuration Files
+
+- `~/.aiconfig` - AI development configuration (worktrees, Cursor integration, etc.)
+- `~/.aliases` - General shell aliases
+- `~/.zshrc` - Main shell configuration
+
+### Quick Configuration
+
+```bash
+# Edit AI configuration
+aiconfig
+
+# Edit shell aliases  
+aliasconfig
+
+# Edit main shell config
+zshconfig
+```
+
+**Note**: The `aiconfig` file is automatically symlinked to `~/.aiconfig` during installation, so the AI worktree helpers will be available immediately after setup.
+
+### Quick Start
+
+```bash
+# Create a new worktree for a feature
+wt-new feat-search-sorting
+
+# Navigate to the worktree
+wt-enter feat-search-sorting
+
+# Clean up after merge
+wt-clean feat-search-sorting
+```
+
+### Available Commands
+
+- `wt-new <branch>` - Create a new worktree with dynamic repository detection and smart dependency installation
+- `wt-enter <branch>` - Navigate to an existing worktree
+- `wt-clean <branch>` - Remove worktree and delete branch (after merge)
+- `wt-list` - List all active worktrees
+- `wt-info` - Show repository information and project type
+- `cursor-open-worktree <branch>` - Open worktree directly in Cursor
+- `ai-setup` - Check AI development environment setup
+- `worktree_prompt_segment` - Show worktree indicator in prompt
+
+### Complete Workflow
+
+1. **Start a new task:**
+
+     ```bash
+     wt-new feat-search-sorting
+     ```
+
+     This creates `./wt-feat-search-sorting` with a new branch off the detected default branch (main/master), automatically detects project type and installs dependencies (Ruby, Node.js, Python with Poetry/pip, etc.).
+
+2. **Point Cursor to the worktree:**
+
+   ```bash
+   cursor-open-worktree feat-search-sorting
+   ```
+
+   Or manually open Cursor and set the workspace to `./wt-feat-search-sorting`
+
+3. **Work in parallel:**
+   - You work in your main workspace
+   - Cursor agents work in the worktree
+   - Each has its own clean working directory
+
+4. **Review and commit changes:**
+
+   ```bash
+   wt-enter feat-search-sorting
+   git status
+   git add -A
+   git commit -m "feat(search): add sorting by popularity"
+   ```
+
+5. **Keep branch fresh:**
+
+   ```bash
+   git fetch origin
+   git rebase origin/main
+   ```
+
+6. **Push and create PR:**
+
+   ```bash
+   git push -u origin feat-search-sorting
+   gh pr create --base main --head feat-search-sorting \
+     --title "feat(search): sorting by popularity" \
+     --body "Adds popularity sort to search results. Includes tests and docs."
+   ```
+
+7. **Clean up after merge:**
+
+   ```bash
+   # From your main workspace (not inside the worktree)
+   wt-clean feat-search-sorting
+   ```
+
+### Prompt Integration
+
+The worktree name appears in your prompt when you're inside a worktree:
+
+```
+giovanni@mbp ~/repo/wt-feat-search [wt:feat-search] (feat-search) %
+```
+
+### Stash Behavior
+
+All worktrees share the same stash stack because they share the same `.git` directory. Best practices:
+
+- Tag stashes with worktree name: `git stash push -m "wt-search-sorting: WIP parser tweak"`
+- Prefer small commits over stashes when multiple worktrees are active
+- Apply stashes back in the same worktree they came from
+
+### Smart Features
+
+- **Dynamic Repository Detection**: Automatically detects default branch (main/master) and remote URL
+- **Multi-Language Support**: Detects and installs dependencies for Ruby, Node.js, and Python projects
+- **Python Support**: Prioritizes Poetry (`pyproject.toml`) over pip (`requirements.txt`)
+- **Project Type Detection**: Use `wt-info` to see repository information and detected project type
+- **Cursor Integration**: Direct worktree opening with `cursor-open-worktree`
+
+### Troubleshooting
+
+- **Detached HEAD**: Always create worktrees with `-b <branch>` or switch to a branch before committing
+- **Pushing wrong base**: Start from detected default branch and run `git rebase origin/main` before pushing
+- **Can't delete branch**: Remove the worktree first with `wt-clean`
+- **Pre-commit hooks**: Ensure Node/Poetry/etc. installs happen inside the worktree
+- **Unknown project type**: Use `wt-info` to check what was detected, or manually install dependencies
 
 ---
 
