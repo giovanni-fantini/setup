@@ -26,34 +26,48 @@ wt-new() {
   echo "Creating worktree for branch: $task"
   echo "Using default branch: $default_branch"
   
-  git fetch origin && git worktree add -b "$task" "wt-$task" "origin/$default_branch"
+  # Get repository root and base name for sibling worktree
+  local repo_root="$(pwd)"
+  local base_name="$(basename "$repo_root")"
+  local worktree_path="../${base_name}-wt-${task}"
+  
+  git fetch origin
+  
+  # Check if branch already exists
+  if git show-ref --verify --quiet refs/heads/"$task"; then
+    echo "Branch '$task' already exists, creating worktree without -b flag"
+    git worktree add "$worktree_path" "$task"
+  else
+    echo "Creating new branch '$task'"
+    git worktree add -b "$task" "$worktree_path" "origin/$default_branch"
+  fi
   
   if [ $? -eq 0 ]; then
-    echo "Worktree created at ./wt-$task"
+    echo "Worktree created at $worktree_path"
     echo "Installing dependencies..."
     
     # Check if this is a Ruby project and install dependencies
-    if [ -f "wt-$task/Gemfile" ] && command -v bundle >/dev/null; then
+    if [ -f "$worktree_path/Gemfile" ] && command -v bundle >/dev/null; then
       echo "Detected Ruby project - running bundle install..."
-      (cd "wt-$task" && bundle install)
+      (cd "$worktree_path" && bundle install)
     fi
     
     # Check if this is a Node.js project and install dependencies
-    if [ -f "wt-$task/package.json" ] && command -v yarn >/dev/null; then
+    if [ -f "$worktree_path/package.json" ] && command -v yarn >/dev/null; then
       echo "Detected Node.js project - running yarn install..."
-      (cd "wt-$task" && yarn install)
-    elif [ -f "wt-$task/package.json" ] && command -v npm >/dev/null; then
+      (cd "$worktree_path" && yarn install)
+    elif [ -f "$worktree_path/package.json" ] && command -v npm >/dev/null; then
       echo "Detected Node.js project - running npm install..."
-      (cd "wt-$task" && npm install)
+      (cd "$worktree_path" && npm install)
     fi
     
     # Check for Python projects
-    if [ -f "wt-$task/pyproject.toml" ] && command -v poetry >/dev/null; then
+    if [ -f "$worktree_path/pyproject.toml" ] && command -v poetry >/dev/null; then
       echo "Detected Poetry project - running poetry install..."
-      (cd "wt-$task" && poetry install)
-    elif [ -f "wt-$task/requirements.txt" ] && command -v pip >/dev/null; then
+      (cd "$worktree_path" && poetry install)
+    elif [ -f "$worktree_path/requirements.txt" ] && command -v pip >/dev/null; then
       echo "Detected Python project - running pip install..."
-      (cd "wt-$task" && pip install -r requirements.txt)
+      (cd "$worktree_path" && pip install -r requirements.txt)
     fi
     
     echo "Worktree ready! Use 'wt-enter $task' to navigate to it."
@@ -70,8 +84,13 @@ wt-clean() {
   local task="$1"
   [ -z "$task" ] && { echo "usage: wt-clean <branch-name>"; return 1; }
   
+  # Get repository root and base name for sibling worktree
+  local repo_root="$(pwd)"
+  local base_name="$(basename "$repo_root")"
+  local worktree_path="../${base_name}-wt-${task}"
+  
   echo "Cleaning up worktree: $task"
-  git worktree remove "wt-$task" || return 1
+  git worktree remove "$worktree_path" || return 1
   git branch -d "$task" 2>/dev/null || echo "Branch not merged; use 'git branch -D $task' to force."
   git fetch -p
   echo "Worktree cleaned up!"
@@ -82,10 +101,15 @@ wt-enter() {
   local task="$1"
   [ -z "$task" ] && { echo "usage: wt-enter <branch-name>"; return 1; }
   
-  if [ -d "wt-$task" ]; then
-    cd "wt-$task"
+  # Get repository root and base name for sibling worktree
+  local repo_root="$(pwd)"
+  local base_name="$(basename "$repo_root")"
+  local worktree_path="../${base_name}-wt-${task}"
+  
+  if [ -d "$worktree_path" ]; then
+    cd "$worktree_path"
   else
-    echo "Worktree wt-$task not found. Use 'wt-new $task' to create it."
+    echo "Worktree $worktree_path not found. Use 'wt-new $task' to create it."
     return 1
   fi
 }
@@ -139,11 +163,16 @@ cursor-open-worktree() {
   local task="$1"
   [ -z "$task" ] && { echo "usage: cursor-open-worktree <branch-name>"; return 1; }
   
-  if [ -d "wt-$task" ]; then
-    echo "Opening Cursor with worktree: wt-$task"
-    cursor "wt-$task"
+  # Get repository root and base name for sibling worktree
+  local repo_root="$(pwd)"
+  local base_name="$(basename "$repo_root")"
+  local worktree_path="../${base_name}-wt-${task}"
+  
+  if [ -d "$worktree_path" ]; then
+    echo "Opening Cursor with worktree: $worktree_path"
+    cursor "$worktree_path"
   else
-    echo "Worktree wt-$task not found. Use 'wt-new $task' to create it."
+    echo "Worktree $worktree_path not found. Use 'wt-new $task' to create it."
     return 1
   fi
 }

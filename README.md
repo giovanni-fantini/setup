@@ -346,7 +346,7 @@ wt-clean feat-search-sorting
      wt-new feat-search-sorting
      ```
 
-     This creates `./wt-feat-search-sorting` with a new branch off the detected default branch (main/master), automatically detects project type and installs dependencies (Ruby, Node.js, Python with Poetry/pip, etc.).
+     This creates `../easol-wt-feat-search-sorting` (sibling to main repo) with a new branch off the detected default branch (main/master), automatically detects project type and installs dependencies (Ruby, Node.js, Python with Poetry/pip, etc.).
 
 2. **Point Cursor to the worktree:**
 
@@ -354,7 +354,7 @@ wt-clean feat-search-sorting
    cursor-open-worktree feat-search-sorting
    ```
 
-   Or manually open Cursor and set the workspace to `./wt-feat-search-sorting`
+   Or manually open Cursor and set the workspace to `../easol-wt-feat-search-sorting`
 
 3. **Work in parallel:**
    - You work in your main workspace
