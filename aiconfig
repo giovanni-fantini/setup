@@ -70,6 +70,17 @@ wt-new() {
       (cd "$worktree_path" && pip install -r requirements.txt)
     fi
     
+    # Copy .env file from main repo to worktree if it exists
+    if [ -f "$repo_root/.env" ]; then
+      echo "Copying .env file from main repository..."
+      cp "$repo_root/.env" "$worktree_path/.env"
+    elif [ -f "$repo_root/.env.example" ]; then
+      echo "Copying .env.example file from main repository..."
+      cp "$repo_root/.env.example" "$worktree_path/.env"
+    else
+      echo "No .env or .env.example file found in main repository - skipping environment setup"
+    fi
+    
     echo "Worktree ready! Use 'wt-enter $task' to navigate to it."
     echo "Repository: $remote_url"
     echo "Default branch: $default_branch"

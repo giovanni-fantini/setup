@@ -318,43 +318,43 @@ zshconfig
 
 ```bash
 # Create a new worktree for a feature
-wt-new feat-search-sorting
+wt-new feature-branch
 
 # Navigate to the worktree
-wt-enter feat-search-sorting
+wt-enter feature-branch
 
 # Clean up after merge
-wt-clean feat-search-sorting
+wt-clean feature-branch
 ```
 
 ### Available Commands
 
-- `wt-new <branch>` - Create a new worktree with dynamic repository detection and smart dependency installation
+- `wt-new <branch>` - Create a new worktree with dynamic repository detection, smart dependency installation, and environment file setup
 - `wt-enter <branch>` - Navigate to an existing worktree
 - `wt-clean <branch>` - Remove worktree and delete branch (after merge)
 - `wt-list` - List all active worktrees
 - `wt-info` - Show repository information and project type
+- `wt-detect-project-type` - Detect project type based on configuration files
 - `cursor-open-worktree <branch>` - Open worktree directly in Cursor
 - `ai-setup` - Check AI development environment setup
-- `worktree_prompt_segment` - Show worktree indicator in prompt
 
 ### Complete Workflow
 
 1. **Start a new task:**
 
      ```bash
-     wt-new feat-search-sorting
+     wt-new feature-branch
      ```
 
-     This creates `../easol-wt-feat-search-sorting` (sibling to main repo) with a new branch off the detected default branch (main/master), automatically detects project type and installs dependencies (Ruby, Node.js, Python with Poetry/pip, etc.).
+     This creates `../project-name-wt-feature-branch` (sibling to main repo) with a new branch off the detected default branch (main/master), automatically detects project type, installs dependencies (Ruby, Node.js, Python with Poetry/pip, etc.), and copies environment files (.env or .env.example) from the main repository.
 
 2. **Point Cursor to the worktree:**
 
    ```bash
-   cursor-open-worktree feat-search-sorting
+   cursor-open-worktree feature-branch
    ```
 
-   Or manually open Cursor and set the workspace to `../easol-wt-feat-search-sorting`
+   Or manually open Cursor in the worktree
 
 3. **Work in parallel:**
    - You work in your main workspace
@@ -364,10 +364,10 @@ wt-clean feat-search-sorting
 4. **Review and commit changes:**
 
    ```bash
-   wt-enter feat-search-sorting
+   wt-enter feature-branch
    git status
    git add -A
-   git commit -m "feat(search): add sorting by popularity"
+   git commit -m "feat: implement new feature"
    ```
 
 5. **Keep branch fresh:**
@@ -380,26 +380,18 @@ wt-clean feat-search-sorting
 6. **Push and create PR:**
 
    ```bash
-   git push -u origin feat-search-sorting
-   gh pr create --base main --head feat-search-sorting \
-     --title "feat(search): sorting by popularity" \
-     --body "Adds popularity sort to search results. Includes tests and docs."
+   git push origin feature-branch
+   gh pr create --base main --head feature-branch \
+     --title "feat: implement new feature" \
+     --body "Implements new feature with tests and documentation."
    ```
 
 7. **Clean up after merge:**
 
    ```bash
    # From your main workspace (not inside the worktree)
-   wt-clean feat-search-sorting
+   wt-clean feature-branch
    ```
-
-### Prompt Integration
-
-The worktree name appears in your prompt when you're inside a worktree:
-
-```
-giovanni@mbp ~/repo/wt-feat-search [wt:feat-search] (feat-search) %
-```
 
 ### Stash Behavior
 
@@ -414,6 +406,7 @@ All worktrees share the same stash stack because they share the same `.git` dire
 - **Dynamic Repository Detection**: Automatically detects default branch (main/master) and remote URL
 - **Multi-Language Support**: Detects and installs dependencies for Ruby, Node.js, and Python projects
 - **Python Support**: Prioritizes Poetry (`pyproject.toml`) over pip (`requirements.txt`)
+- **Environment Setup**: Automatically copies `.env` file from main repository, or `.env.example` as fallback
 - **Project Type Detection**: Use `wt-info` to see repository information and detected project type
 - **Cursor Integration**: Direct worktree opening with `cursor-open-worktree`
 
@@ -424,6 +417,7 @@ All worktrees share the same stash stack because they share the same `.git` dire
 - **Can't delete branch**: Remove the worktree first with `wt-clean`
 - **Pre-commit hooks**: Ensure Node/Poetry/etc. installs happen inside the worktree
 - **Unknown project type**: Use `wt-info` to check what was detected, or manually install dependencies
+- **Missing environment variables**: Check if `.env` or `.env.example` exists in main repository, or manually copy environment files
 
 ---
 
