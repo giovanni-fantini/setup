@@ -29,7 +29,14 @@ wt-new() {
   # Get repository root and base name for sibling worktree
   local repo_root="$(pwd)"
   local base_name="$(basename "$repo_root")"
-  local worktree_path="../${base_name}-wt-${task}"
+  
+  # Limit task name length to avoid path length issues (max ~50 chars for task)
+  local truncated_task="${task:0:50}"
+  if [ "${#task}" -gt 50 ]; then
+    echo "Warning: Task name truncated from '${task}' to '${truncated_task}' to avoid path length issues"
+  fi
+  
+  local worktree_path="../${base_name}-wt-${truncated_task}"
 
   # Ensure local main branch is up to date before creating worktree
   echo "Ensuring local $default_branch branch is up to date..."
@@ -101,7 +108,10 @@ wt-clean() {
   # Get repository root and base name for sibling worktree
   local repo_root="$(pwd)"
   local base_name="$(basename "$repo_root")"
-  local worktree_path="../${base_name}-wt-${task}"
+  
+  # Limit task name length to match wt-new function
+  local truncated_task="${task:0:50}"
+  local worktree_path="../${base_name}-wt-${truncated_task}"
   
   echo "Cleaning up worktree: $task"
   git worktree remove "$worktree_path" || return 1
@@ -118,7 +128,10 @@ wt-enter() {
   # Get repository root and base name for sibling worktree
   local repo_root="$(pwd)"
   local base_name="$(basename "$repo_root")"
-  local worktree_path="../${base_name}-wt-${task}"
+  
+  # Limit task name length to match wt-new function
+  local truncated_task="${task:0:50}"
+  local worktree_path="../${base_name}-wt-${truncated_task}"
   
   if [ -d "$worktree_path" ]; then
     cd "$worktree_path"
@@ -180,7 +193,10 @@ cursor-open-worktree() {
   # Get repository root and base name for sibling worktree
   local repo_root="$(pwd)"
   local base_name="$(basename "$repo_root")"
-  local worktree_path="../${base_name}-wt-${task}"
+  
+  # Limit task name length to match wt-new function
+  local truncated_task="${task:0:50}"
+  local worktree_path="../${base_name}-wt-${truncated_task}"
   
   if [ -d "$worktree_path" ]; then
     echo "Opening Cursor with worktree: $worktree_path"
