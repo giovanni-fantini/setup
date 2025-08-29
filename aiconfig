@@ -30,8 +30,11 @@ wt-new() {
   local repo_root="$(pwd)"
   local base_name="$(basename "$repo_root")"
   local worktree_path="../${base_name}-wt-${task}"
-  
+
+  # Ensure local main branch is up to date before creating worktree
+  echo "Ensuring local $default_branch branch is up to date..."
   git fetch origin
+  git pull origin "$default_branch"
   
   # Check if branch already exists
   if git show-ref --verify --quiet refs/heads/"$task"; then
@@ -39,7 +42,7 @@ wt-new() {
     git worktree add "$worktree_path" "$task"
   else
     echo "Creating new branch '$task'"
-    git worktree add -b "$task" "$worktree_path" "origin/$default_branch"
+    git worktree add -b "$task" "$worktree_path" "$default_branch"
   fi
   
   if [ $? -eq 0 ]; then
