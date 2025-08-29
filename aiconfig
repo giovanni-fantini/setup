@@ -29,7 +29,14 @@ wt-new() {
   # Get repository root and base name for sibling worktree
   local repo_root="$(pwd)"
   local base_name="$(basename "$repo_root")"
-  local worktree_path="../${base_name}-wt-${task}"
+  
+  # Limit task name length to avoid path length issues (max ~30 chars for task to account for overmind/tmux additions)
+  local truncated_task="${task:0:30}"
+  if [ "${#task}" -gt 30 ]; then
+    echo "Warning: Task name truncated from '${task}' to '${truncated_task}' to avoid path length issues with overmind/tmux"
+  fi
+  
+  local worktree_path="../${base_name}-wt-${truncated_task}"
 
   # Ensure local main branch is up to date before creating worktree
   echo "Ensuring local $default_branch branch is up to date..."
@@ -101,7 +108,10 @@ wt-clean() {
   # Get repository root and base name for sibling worktree
   local repo_root="$(pwd)"
   local base_name="$(basename "$repo_root")"
-  local worktree_path="../${base_name}-wt-${task}"
+  
+  # Limit task name length to match wt-new function
+  local truncated_task="${task:0:30}"
+  local worktree_path="../${base_name}-wt-${truncated_task}"
   
   echo "Cleaning up worktree: $task"
   git worktree remove "$worktree_path" || return 1
@@ -118,7 +128,10 @@ wt-enter() {
   # Get repository root and base name for sibling worktree
   local repo_root="$(pwd)"
   local base_name="$(basename "$repo_root")"
-  local worktree_path="../${base_name}-wt-${task}"
+  
+  # Limit task name length to match wt-new function
+  local truncated_task="${task:0:30}"
+  local worktree_path="../${base_name}-wt-${truncated_task}"
   
   if [ -d "$worktree_path" ]; then
     cd "$worktree_path"
@@ -180,7 +193,10 @@ cursor-open-worktree() {
   # Get repository root and base name for sibling worktree
   local repo_root="$(pwd)"
   local base_name="$(basename "$repo_root")"
-  local worktree_path="../${base_name}-wt-${task}"
+  
+  # Limit task name length to match wt-new function
+  local truncated_task="${task:0:30}"
+  local worktree_path="../${base_name}-wt-${truncated_task}"
   
   if [ -d "$worktree_path" ]; then
     echo "Opening Cursor with worktree: $worktree_path"
@@ -189,6 +205,49 @@ cursor-open-worktree() {
     echo "Worktree $worktree_path not found. Use 'wt-new $task' to create it."
     return 1
   fi
+}
+
+# Rename existing worktree to shorter name to avoid path length issues
+wt-rename() {
+  local old_task="$1"
+  local new_task="$2"
+  [ -z "$old_task" ] || [ -z "$new_task" ] && { echo "usage: wt-rename <old-branch-name> <new-branch-name>"; return 1; }
+  
+  # Get repository root and base name for sibling worktree
+  local repo_root="$(pwd)"
+  local base_name="$(basename "$repo_root")"
+  
+  # Limit new task name length
+  local truncated_new_task="${new_task:0:30}"
+  if [ "${#new_task}" -gt 30 ]; then
+    echo "Warning: New task name truncated from '${new_task}' to '${truncated_new_task}' to avoid path length issues with overmind/tmux"
+  fi
+  
+  local old_worktree_path="../${base_name}-wt-${old_task}"
+  local new_worktree_path="../${base_name}-wt-${truncated_new_task}"
+  
+  if [ ! -d "$old_worktree_path" ]; then
+    echo "Error: Worktree '$old_worktree_path' not found"
+    return 1
+  fi
+  
+  if [ -d "$new_worktree_path" ]; then
+    echo "Error: Worktree '$new_worktree_path' already exists"
+    return 1
+  fi
+  
+  echo "Renaming worktree from '$old_task' to '$truncated_new_task'"
+  echo "Old path: $old_worktree_path"
+  echo "New path: $new_worktree_path"
+  
+  # Rename the worktree directory
+  mv "$old_worktree_path" "$new_worktree_path"
+  
+  # Update the worktree's git configuration to point to the new path
+  (cd "$new_worktree_path" && git config --local --replace-all core.worktree "$new_worktree_path")
+  
+  echo "Worktree renamed successfully!"
+  echo "You can now use 'wt-enter $truncated_new_task' to navigate to it."
 }
 
 # Claude/Anthropic helpers (placeholder for future Claude integration)
