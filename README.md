@@ -329,14 +329,23 @@ wt-clean feature-branch
 
 ### Available Commands
 
+**Core Worktree Management:**
+
 - `wt-new <branch>` - Create a new worktree with dynamic repository detection, smart dependency installation, and environment file setup
 - `wt-enter <branch>` - Navigate to an existing worktree
 - `wt-clean <branch>` - Remove worktree and delete branch (after merge)
 - `wt-list` - List all active worktrees
 - `wt-info` - Show repository information and project type
-- `wt-detect-project-type` - Detect project type based on configuration files
+- `wt-rename <old> <new>` - Rename worktree to avoid path length issues (prevents overmind/tmux errors)
+
+**Cursor Integration:**
+
 - `cursor-open-worktree <branch>` - Open worktree directly in Cursor
-- `ai-setup` - Check AI development environment setup
+
+**Troubleshooting & Diagnostics:**
+
+- `wt-diagnose` - Detailed worktree diagnostics and configuration analysis
+- `ai-setup` - Check AI development environment setup and list all available commands
 
 ### Complete Workflow
 
@@ -403,6 +412,8 @@ All worktrees share the same stash stack because they share the same `.git` dire
 
 ### Smart Features
 
+**Core Functionality:**
+
 - **Dynamic Repository Detection**: Automatically detects default branch (main/master) and remote URL
 - **Multi-Language Support**: Detects and installs dependencies for Ruby, Node.js, and Python projects
 - **Python Support**: Prioritizes Poetry (`pyproject.toml`) over pip (`requirements.txt`)
@@ -410,7 +421,20 @@ All worktrees share the same stash stack because they share the same `.git` dire
 - **Project Type Detection**: Use `wt-info` to see repository information and detected project type
 - **Cursor Integration**: Direct worktree opening with `cursor-open-worktree`
 
+**Path Length Management:**
+
+- **Automatic Truncation**: Branch names longer than 30 characters are automatically truncated to prevent overmind/tmux socket path issues
+- **Smart Renaming**: `wt-rename` function properly handles worktree reconfiguration without corruption
+- **Corruption Prevention**: Built-in safeguards prevent the "cannot chdir" errors that occur with manual directory renaming
+
+**Error Handling:**
+
+- **Corruption Detection**: `wt-diagnose` provides detailed analysis of worktree state
+- **Manual Cleanup**: For corrupted worktrees, use `wt-diagnose` to identify issues, then manually clean up `.git/worktrees/` and `.git/config` as needed
+
 ### Troubleshooting
+
+**Common Issues:**
 
 - **Detached HEAD**: Always create worktrees with `-b <branch>` or switch to a branch before committing
 - **Pushing wrong base**: Start from detected default branch and run `git rebase origin/main` before pushing
@@ -418,6 +442,19 @@ All worktrees share the same stash stack because they share the same `.git` dire
 - **Pre-commit hooks**: Ensure Node/Poetry/etc. installs happen inside the worktree
 - **Unknown project type**: Use `wt-info` to check what was detected, or manually install dependencies
 - **Missing environment variables**: Check if `.env` or `.env.example` exists in main repository, or manually copy environment files
+
+**Worktree Issues & Resolution:**
+
+- **Path Length Issues**: Worktree names are automatically truncated to 30 characters to prevent overmind/tmux socket path issues
+- **Corruption Prevention**: Always use `wt-rename <old> <new>` instead of manually renaming worktree directories
+- **"cannot chdir" Errors**: Usually indicates corrupted git worktree configuration
+
+**Manual Cleanup Procedure:**
+
+1. Run `wt-diagnose` to identify corrupted worktree entries
+2. Remove corrupted entries from `.git/worktrees/` directory  
+3. Check `.git/config` for any `worktree = <path>` lines pointing to non-existent paths and remove them
+4. Use `wt-new` to recreate the worktree with a proper short name
 
 ---
 

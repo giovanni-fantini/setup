@@ -109,12 +109,47 @@ wt-clean() {
   local repo_root="$(pwd)"
   local base_name="$(basename "$repo_root")"
   
-  # Limit task name length to match wt-new function
+  # Try to find the worktree by searching for directories that contain the task name
+  local worktree_path=""
+  local found_worktree=""
+  
+  # First try the truncated name (for new worktrees)
   local truncated_task="${task:0:30}"
-  local worktree_path="../${base_name}-wt-${truncated_task}"
+  local truncated_path="../${base_name}-wt-${truncated_task}"
+  if [ -d "$truncated_path" ]; then
+    worktree_path="$truncated_path"
+    found_worktree="$truncated_path"
+  else
+    # Search for existing worktrees with longer names that contain the task
+    for dir in "../${base_name}-wt-"*; do
+      if [ -d "$dir" ] && [[ "$dir" == *"$task"* ]]; then
+        worktree_path="$dir"
+        found_worktree="$dir"
+        break
+      fi
+    done
+  fi
+  
+  if [ -z "$found_worktree" ]; then
+    echo "Error: No worktree found for branch '$task'"
+    echo "Searched in: ../${base_name}-wt-*"
+    return 1
+  fi
   
   echo "Cleaning up worktree: $task"
-  git worktree remove "$worktree_path" || return 1
+  echo "Found worktree at: $found_worktree"
+  
+  # Check if this worktree is properly registered with git
+  local git_worktree_path=$(git worktree list | grep "$task" | awk '{print $1}')
+  if [ -n "$git_worktree_path" ]; then
+    echo "Git worktree registered at: $git_worktree_path"
+    # Use the git-registered path for removal
+    git worktree remove "$git_worktree_path" || return 1
+  else
+    echo "Warning: Worktree not found in git worktree list, removing directory manually"
+    rm -rf "$found_worktree"
+  fi
+  
   git branch -d "$task" 2>/dev/null || echo "Branch not merged; use 'git branch -D $task' to force."
   git fetch -p
   echo "Worktree cleaned up!"
@@ -240,28 +275,55 @@ wt-rename() {
   echo "Old path: $old_worktree_path"
   echo "New path: $new_worktree_path"
   
+  # First, remove the worktree from git's tracking
+  echo "Removing worktree from git tracking..."
+  git worktree remove "$old_worktree_path" || {
+    echo "Warning: Could not remove worktree from git tracking, proceeding with manual cleanup"
+  }
+  
   # Rename the worktree directory
   mv "$old_worktree_path" "$new_worktree_path"
   
-  # Update the worktree's git configuration to point to the new path
-  (cd "$new_worktree_path" && git config --local --replace-all core.worktree "$new_worktree_path")
+  # Re-register the worktree with the new path
+  echo "Re-registering worktree with new path..."
+  git worktree add "$new_worktree_path" "$old_task"
   
   echo "Worktree renamed successfully!"
-  echo "You can now use 'wt-enter $truncated_new_task' to navigate to it."
+  echo "You can now use 'wt-enter $old_task' to navigate to it."
 }
 
-# Claude/Anthropic helpers (placeholder for future Claude integration)
-claude-analyze() {
-  local file="$1"
-  [ -z "$file" ] && { echo "usage: claude-analyze <file>"; return 1; }
+# Detailed worktree diagnostics
+wt-diagnose() {
+  echo "=== Worktree Diagnostics ==="
+  echo ""
   
-  if [ -f "$file" ]; then
-    echo "Analyzing $file with Claude..."
-    # Future integration with Claude API
-    echo "Claude analysis feature coming soon..."
+  # Check current directory
+  echo "Current directory: $(pwd)"
+  echo "Git root: $(git rev-parse --show-toplevel 2>/dev/null || echo 'Not a git repo')"
+  echo ""
+  
+  # Check worktree list
+  echo "=== Git Worktree List ==="
+  git worktree list 2>&1 || echo "Failed to get worktree list"
+  echo ""
+  
+  # Check .git/worktrees directory
+  local git_dir=".git/worktrees"
+  if [ -d "$git_dir" ]; then
+    echo "=== .git/worktrees Contents ==="
+    ls -la "$git_dir"
+    echo ""
+    
+    # Check each worktree subdirectory
+    for subdir in "$git_dir"/*; do
+      if [ -d "$subdir" ]; then
+        echo "=== Worktree: $(basename "$subdir") ==="
+        echo "Path: $(cat "$subdir/gitdir" 2>/dev/null || echo 'No gitdir file')"
+        echo "---"
+      fi
+    done
   else
-    echo "File $file not found."
-    return 1
+    echo "No .git/worktrees directory found"
   fi
 }
 
@@ -286,11 +348,25 @@ ai-setup() {
   fi
   
   echo "AI development environment ready!"
-  echo "Available commands:"
-  echo "  wt-new <branch>     - Create new worktree"
+  echo ""
+  echo "Available worktree commands:"
+  echo "  wt-new <branch>     - Create new worktree with automatic dependency installation"
   echo "  wt-enter <branch>   - Navigate to worktree"
-  echo "  wt-clean <branch>   - Clean up worktree"
-  echo "  wt-list            - List worktrees"
-  echo "  wt-info            - Show repo info"
+  echo "  wt-clean <branch>   - Clean up worktree and branch"
+  echo "  wt-list            - List all worktrees"
+  echo "  wt-info            - Show repository information"
+  echo "  wt-rename <old> <new> - Rename worktree to avoid path length issues"
   echo "  cursor-open-worktree <branch> - Open worktree in Cursor"
+  echo ""
+  echo "Troubleshooting commands:"
+  echo "  wt-diagnose        - Detailed worktree diagnostics"
+  echo ""
+  echo "Features:"
+  echo "  • Automatic branch name truncation (30 chars max) to prevent overmind/tmux path issues"
+  echo "  • Smart dependency detection and installation (Ruby, Node.js, Python)"
+  echo "  • Environment file copying (.env, .env.example)"
+  echo "  • Robust worktree management with automatic path length handling"
+  echo ""
+  echo "Note: For corrupted worktree issues, use 'wt-diagnose' to identify problems,"
+  echo "then manually clean up .git/worktrees/ and .git/config as needed."
 }
