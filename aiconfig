@@ -58,8 +58,8 @@ wt-new() {
     
     # Check if this is a Ruby project and install dependencies
     if [ -f "$worktree_path/Gemfile" ] && command -v bundle >/dev/null; then
-      echo "Detected Ruby project - running bundle install..."
-      (cd "$worktree_path" && bundle install)
+      echo "Detected Ruby project - running bundle install with local path to avoid global gem conflicts..."
+      (cd "$worktree_path" && bundle install --path vendor/bundle)
     fi
     
     # Check if this is a Node.js project and install dependencies
