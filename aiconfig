@@ -163,8 +163,12 @@ wt-clean() {
   echo "Cleaning up worktree: $task"
   echo "Found worktree at: $found_worktree"
   
-  # Check if this worktree is properly registered with git
-  local git_worktree_path=$(git worktree list | grep "$task" | awk '{print $1}')
+  # Check if this worktree is properly registered with git (match EXACT branch)
+  local git_worktree_path=""
+  git_worktree_path=$(git worktree list --porcelain | awk -v b="$task" '
+    $1=="worktree" { path=$2 }
+    $1=="branch" && $2=="refs/heads/" b { print path; exit }
+  ')
   if [ -n "$git_worktree_path" ]; then
     echo "Git worktree registered at: $git_worktree_path"
     # Use the git-registered path for removal
