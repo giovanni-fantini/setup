@@ -43,12 +43,17 @@ wt-new() {
   git fetch origin
   git pull origin "$default_branch"
   
-  # Check if branch already exists
+  # Check if branch already exists locally or on origin
   if git show-ref --verify --quiet refs/heads/"$task"; then
-    echo "Branch '$task' already exists, creating worktree without -b flag"
+    echo "Branch '$task' already exists locally, creating worktree without -b flag"
+    git worktree add "$worktree_path" "$task"
+  elif git show-ref --verify --quiet refs/remotes/origin/"$task"; then
+    echo "Remote branch 'origin/$task' found. Creating local tracking branch and worktree..."
+    # Create local branch tracking the remote
+    git branch --track "$task" "origin/$task" 2>/dev/null || git branch "$task" "origin/$task"
     git worktree add "$worktree_path" "$task"
   else
-    echo "Creating new branch '$task'"
+    echo "No local or remote branch named '$task' found. Creating new branch from '$default_branch'"
     git worktree add -b "$task" "$worktree_path" "$default_branch"
   fi
   
@@ -58,8 +63,13 @@ wt-new() {
     
     # Check if this is a Ruby project and install dependencies
     if [ -f "$worktree_path/Gemfile" ] && command -v bundle >/dev/null; then
-      echo "Detected Ruby project - running bundle install with local path to avoid global gem conflicts..."
-      (cd "$worktree_path" && bundle install --path vendor/bundle)
+      echo "Detected Ruby project - syncing Bundler config from main and running bundle install..."
+      # If the main repo has a .bundle/config, copy it so the worktree mirrors main's bundler settings
+      if [ -d "$repo_root/.bundle" ]; then
+        mkdir -p "$worktree_path/.bundle"
+        cp -R "$repo_root/.bundle/" "$worktree_path/.bundle/"
+      fi
+      (cd "$worktree_path" && bundle install)
     fi
     
     # Check if this is a Node.js project and install dependencies
@@ -102,8 +112,22 @@ wt-new() {
 
 # Remove worktree + branch (after merge)
 wt-clean() {
+  local force=0
+  # Parse flags
+  while [[ "$1" == -* ]]; do
+    case "$1" in
+      --force|-f)
+        force=1
+        shift
+        ;;
+      *)
+        break
+        ;;
+    esac
+  done
+
   local task="$1"
-  [ -z "$task" ] && { echo "usage: wt-clean <branch-name>"; return 1; }
+  [ -z "$task" ] && { echo "usage: wt-clean [--force|-f] <branch-name>"; return 1; }
   
   # Get repository root and base name for sibling worktree
   local repo_root="$(pwd)"
@@ -144,13 +168,21 @@ wt-clean() {
   if [ -n "$git_worktree_path" ]; then
     echo "Git worktree registered at: $git_worktree_path"
     # Use the git-registered path for removal
-    git worktree remove "$git_worktree_path" || return 1
+    if [ "$force" -eq 1 ]; then
+      git worktree remove --force "$git_worktree_path" || return 1
+    else
+      git worktree remove "$git_worktree_path" || return 1
+    fi
   else
     echo "Warning: Worktree not found in git worktree list, removing directory manually"
     rm -rf "$found_worktree"
   fi
   
-  git branch -d "$task" 2>/dev/null || echo "Branch not merged; use 'git branch -D $task' to force."
+  if [ "$force" -eq 1 ]; then
+    git branch -D "$task" 2>/dev/null || true
+  else
+    git branch -d "$task" 2>/dev/null || echo "Branch not merged; use 'git branch -D $task' to force."
+  fi
   git fetch -p
   echo "Worktree cleaned up!"
 }

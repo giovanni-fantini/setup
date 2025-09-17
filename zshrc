@@ -17,6 +17,7 @@ type -a rbenv > /dev/null && eval "$(rbenv init -)"
 # So instead of running `bin/rails` like the doc says, just run `rails`
 # Same for `./node_modules/.bin` and nodejs
 export PATH="./bin:./node_modules/.bin:${PATH}:/usr/local/sbin"
+export PATH="$HOME/.local/bin:$PATH"
 
 # Node.js and NVM setup (supports both Homebrew and standard installation)
 export NVM_DIR="$HOME/.nvm"
