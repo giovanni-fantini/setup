@@ -23,7 +23,7 @@ cask "iterm2"              # Terminal emulator
 # brew "bat"            # Better cat with syntax highlighting
 # brew "fd"             # Fast find alternative
 # brew "ripgrep"        # Fast grep alternative
-# brew "fzf"            # Fuzzy finder
+brew "fzf"            # Fuzzy finder
 
 # Optional Docker (can be installed separately if needed)
 # brew "docker"         # Container platform
