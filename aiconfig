@@ -43,6 +43,30 @@ wt-new() {
   git fetch origin
   git pull origin "$default_branch"
   
+  # Check if worktree path already exists
+  if [ -d "$worktree_path" ]; then
+    echo "Error: Worktree path '$worktree_path' already exists"
+    echo "This could be due to:"
+    echo "  1. Another worktree with the same truncated name"
+    echo "  2. A previous failed cleanup"
+    echo "Use 'wt-clean $task' to remove the existing worktree, or choose a different branch name"
+    return 1
+  fi
+  
+  # Check if branch is already checked out in another worktree
+  local existing_worktree=""
+  existing_worktree=$(git worktree list --porcelain | awk -v b="$task" '
+    $1=="worktree" { path=$2 }
+    $1=="branch" && $2=="refs/heads/" b { print path; exit }
+  ')
+  
+  if [ -n "$existing_worktree" ]; then
+    echo "Error: Branch '$task' is already checked out in worktree at: $existing_worktree"
+    echo "A branch can only be checked out in one worktree at a time."
+    echo "Use 'wt-clean $task' to remove the existing worktree, or choose a different branch name"
+    return 1
+  fi
+  
   # Check if branch already exists locally or on origin
   if git show-ref --verify --quiet refs/heads/"$task"; then
     echo "Branch '$task' already exists locally, creating worktree without -b flag"
