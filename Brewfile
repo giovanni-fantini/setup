@@ -5,6 +5,7 @@ brew "poetry"    # Python dependency management
 brew "rbenv"     # Ruby version manager
 brew "nvm"       # Node.js version manager
 brew "gh"        # GitHub CLI to interact with PRs
+brew "git-absorb" # Git helper to autofixup and rebase changes in the appropriate commit
 
 # Database Tools (optional - uncomment if needed)
 # brew "postgresql@17"  # PostgreSQL database
