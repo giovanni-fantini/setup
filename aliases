@@ -37,7 +37,9 @@ rubocopdiff() {
       return 1
     fi
   fi
-  git diff-tree -r --relative --no-commit-id --name-only --diff-filter=d "$base_ref" HEAD -- ':(exclude)*schema.rb' |
+  # A...HEAD = diff from merge-base(A, HEAD) to HEAD (this branch’s commits only).
+  # A HEAD (two-point) compares both tips and includes files that changed only on main since you branched.
+  git diff --name-only --relative --diff-filter=d "${base_ref}...HEAD" -- ':(exclude)*schema.rb' |
     xargs bundle exec rubocop -A
 }
 
