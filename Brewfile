@@ -12,9 +12,9 @@ brew "git-absorb" # Git helper to autofixup and rebase changes in the appropriat
 # brew "redis"          # Redis cache/database
 
 # Casks (GUI Applications)
-cask "visual-studio-code"  # Code editor
-cask "cursor"              # AI-powered code editor
-cask "iterm2"              # Terminal emulator
+# cask "visual-studio-code"  # Code editor
+# cask "cursor"              # AI-powered code editor
+# cask "iterm2"              # Terminal emulator
 # cask "docker"              # Docker Desktop
 
 # Optional Development Utilities (can be installed separately if needed)

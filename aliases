@@ -9,6 +9,7 @@ alias speedtest="wget -O /dev/null http://speedtest.wdc01.softlayer.com/download
 # Ruby related
 alias serve='ruby -run -e httpd . -p 8000'  # Or python -m SimpleHTTPServer :)
 alias rspec='bundle exec rspec'
+alias railspull='git pull && bundle && rails db:migrate'
 
 # Python related
 alias pyman='python manage.py $1'
@@ -16,11 +17,28 @@ alias pyman='python manage.py $1'
 # Configs
 alias zshconfig="vim ~/.zshrc"
 alias aliasconfig="vim ~/.aliases"
+alias aiconfig="vim ~/.aiconfig"
 
 # Dev snippets
 rubocopdiff() {
-git diff-tree -r --relative --no-commit-id --name-only --diff-filter=d $1@\{u\} HEAD -- ':(exclude)*schema.rb' |
-xargs rubocop -a
+  local base_ref
+  if [[ -n "$1" ]]; then
+    base_ref="${1}@{u}"
+  else
+    base_ref="@{u}"
+  fi
+  if ! git rev-parse -q --verify "$base_ref" >/dev/null 2>&1; then
+    if git rev-parse -q --verify origin/main >/dev/null 2>&1; then
+      base_ref="origin/main"
+    elif git rev-parse -q --verify origin/master >/dev/null 2>&1; then
+      base_ref="origin/master"
+    else
+      echo "rubocopdiff: no upstream for current branch and no origin/main or origin/master" >&2
+      return 1
+    fi
+  fi
+  git diff-tree -r --relative --no-commit-id --name-only --diff-filter=d "$base_ref" HEAD -- ':(exclude)*schema.rb' |
+    xargs bundle exec rubocop -A
 }
 
 django_delete_migrations() {
@@ -31,9 +49,6 @@ find . -path "*/migrations/*.pyc" -delete
 gitprune() {
 git branch --merged master | grep -v '^[ *]*master$' | xargs git branch -d
 }
-
-# AI Configuration
-alias aiconfig="vim ~/.aiconfig"
 
 # Job-related config (keep this heading as last of file)
 alias companyconfig="vim ~/.easol.sh"
